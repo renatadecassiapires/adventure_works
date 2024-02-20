@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: sap_adw
+    database: adventureworksdesafiolh
+    schema: dbt_rpires
+    tables:
+      - name: department
