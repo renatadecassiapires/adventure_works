@@ -19,3 +19,5 @@ seeds:
       column_types:
         rejectedqty: numeric
         receivedqty: numeric
+
+
