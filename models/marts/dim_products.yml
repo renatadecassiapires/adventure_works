@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: dim_products
+    description: "A dimensional table for product information, enhanced with sales order details."
+    materialized: table
+    columns:
+      - name: product_sk
+        description: "The surrogate key for the product dimension."
+        tests:
+          - unique
+          - not_null
+
+      - name: source_product_id
+        description: "The natural key representing the product ID from the source system."
+        tests:
+          - not_null
+          - unique
+
+      - name: product_name
+        description: "The name of the product."
+        tests:
+          - not_null
+
+      - name: productnumber
+        description: "The product number assigned to the product."
+
+      - name: standardcost
+        description: "The standard cost of the product."
+
+      - name: listprice
+        description: "The list price of the product."
+
+      - name: size
+        description: "The size of the product, if applicable."
+
+      - name: color
+        description: "The color of the product, if applicable."
+
+      - name: weight
+        description: "The weight of the product, if applicable."
+
+      - name: productsubcategoryid
+        description: "Foreign key to the product subcategory dimension."
+
+      - name: productmodelid
+        description: "Foreign key to the product model dimension."
+
+      - name: sellstartdate
+        description: "The start date when the product was available for selling."
+
+      - name: sellenddate
+        description: "The end date when the product was available for selling."
