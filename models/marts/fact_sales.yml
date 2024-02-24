@@ -1,0 +1,83 @@
+version: 2
+
+models:
+  - name: fact_sales
+    description: "A fact table combining sales order data with product, customer, location, and address dimensions."
+
+    columns:
+      - name: salesorderid
+        description: "The unique identifier for each sales order."
+        tests:
+          - not_null
+          - unique
+
+      - name: orderdate
+        description: "The date when the order was placed."
+        tests:
+          - not_null
+
+      - name: productid
+        description: "The identifier for the product ordered."
+        tests:
+          - not_null
+
+      - name: product_name
+        description: "The name of the product."
+        tests:
+          - not_null
+
+      - name: orderqty
+        description: "The quantity of the product ordered."
+        tests:
+          - not_null
+
+      - name: unitprice
+        description: "The price per unit of the product."
+        tests:
+          - not_null
+
+      - name: unitpricediscount
+        description: "Any discount applied to the unit price."
+        tests:
+          - not_null
+
+      - name: source_customer_id
+        description: "The source customer ID from the dim_customers table."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: source_customer_id
+
+      - name: customer_fullname
+        description: "The full name of the customer."
+        tests:
+          - not_null
+
+      - name: city
+        description: "The city of the shipping address."
+        tests:
+          - not_null
+
+      - name: postalcode
+        description: "The postal code of the shipping address."
+        tests:
+          - not_null
+
+      - name: location_sk
+        description: "The surrogate key for the location from the dim_locations table."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_locations')
+              field: location_sk
+
+      - name: location_name
+        description: "The name of the location."
+        tests:
+          - not_null
+
+      - name: total_order_value
+        description: "The total value of the order (Quantity * Unit Price - Discount)."
+        tests:
+          - not_null
