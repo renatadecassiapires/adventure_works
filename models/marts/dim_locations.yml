@@ -3,7 +3,6 @@ version: 2
 models:
   - name: dim_locations
     description: "Dimension table for location data, combining state/province and country information."
-    materialized: table
     columns:
       - name: location_sk
         description: "Surrogate key for location dimension."
@@ -26,3 +25,8 @@ models:
         description: "Name of the country associated with the state or province."
         tests:
           - not_null
+
+    tests:
+      - relationships:
+          to: ref('fact_sales')
+          field: location_sk
