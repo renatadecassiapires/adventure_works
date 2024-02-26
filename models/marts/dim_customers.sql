@@ -40,4 +40,4 @@ transformed AS (
 )
 
 SELECT *
-FROM transformed;
+FROM transformed
