@@ -1,24 +1,22 @@
--- models/marts/dim_customers.sql
-
-CREATE OR REPLACE VIEW `adventureworksdesafiolh`.`dbt_rpires`.`dim_customers` AS
+CREATE OR REPLACE VIEW `adventureworksdesafiolh.dbt_rpires.dim_customers` AS
 WITH stg_customer AS (
     SELECT 
         customerid,
         personid,
         storeid
-    FROM `adventureworksdesafiolh`.`dbt_rpires`.`stg_customer`
+    FROM `adventureworksdesafiolh.dbt_rpires.stg_customer`
 ),
 stg_person AS (
     SELECT
         businessentityid,
         CONCAT(IFNULL(firstname, ''), ' ', IFNULL(middlename, ''), ' ', IFNULL(lastname, '')) AS fullname
-    FROM `adventureworksdesafiolh`.`dbt_rpires`.`stg_person`
+    FROM `adventureworksdesafiolh.dbt_rpires.stg_person`
 ),
 stg_store AS (
     SELECT
         businessentityid AS storebusinessentityid,
         store_name
-    FROM `adventureworksdesafiolh`.`dbt_rpires`.`stg_store`
+    FROM `adventureworksdesafiolh.dbt_rpires.stg_store`
 ),
 transformed AS (
     SELECT
@@ -38,4 +36,3 @@ transformed AS (
 )
 SELECT *
 FROM transformed;
-
