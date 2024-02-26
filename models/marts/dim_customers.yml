@@ -36,3 +36,6 @@ models:
     depends_on:
       - model: stg_customer
       - model: stg_person
+
+
+
