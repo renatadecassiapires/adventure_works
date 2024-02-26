@@ -1,12 +1,10 @@
-with source_data as (
-    select
+WITH source_data AS (
+    SELECT
         businessentityid,
-        name,
+        name AS store_name,
         salespersonid,
-        demographics,
-        rowguid,
         modifieddate
-    from {{ source('sap_adw', 'store') }} 
+    FROM `adventureworksdesafiolh.dbt_rpires.store`
 )
-select *
-from source_data
+SELECT *
+FROM source_data

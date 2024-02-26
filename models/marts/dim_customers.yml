@@ -2,8 +2,40 @@ version: 2
 
 models:
   - name: dim_customers
+    description: "Dimensional table that combines customer, person, and store data. It creates a unified view of customers whether they are individuals or stores."
     columns:
-      - name: fullname
+      - name: customer_sk
+        description: "Auto-incremental surrogate key to uniquely identify each customer."
         tests:
           - not_null
-          - unique # apenas se fullname deve ser único
+
+      - name: customerid
+        description: "Natural key of the customer. Uniquely identifies the customer in the source system."
+        tests:
+          - unique
+          - not_null
+
+      - name: businessentityid
+        description: "Unique identifier for a business entity, used to link to the person or store associated with the customer."
+        tests:
+          - not_null
+
+      - name: fullname
+        description: "Full name of the individual customer. Null for store customers."
+        tests:
+          - not_null
+
+      - name: storebusinessentityid
+        description: "Unique identifier for a store, used when the customer is a store."
+        tests:
+          - not_null
+
+      - name: storename
+        description: "Name of the store, used when the customer is a store."
+        tests:
+          - not_null
+
+      - name: customer_fullname
+        description: "The full name of the customer. It is the person's full name for individual customers and the store name for store customers."
+        tests:
+          - not_null

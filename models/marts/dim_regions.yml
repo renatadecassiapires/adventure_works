@@ -1,27 +1,13 @@
 version: 2
 
 models:
-  - name: dim_region
-    description: "This table combines state/province and country/region data to provide a complete view of geographical regions."
+  - name: dim_regions
+    description: "A dimensional table aggregating sales reasons for each sales order."
     columns:
-      - name: region_sk
-        description: "The surrogate key for the region dimension."
+      - name: salesorderid
+        description: "Unique identifier for each sales order."
         tests:
+          - not_null
           - unique
-          - not_null
-
-      - name: region_id
-        description: "The original identifier for the region from the state/province source system."
-        tests:
-          - unique
-          - not_null
-
-      - name: state_province_name
-        description: "The name of the state or province."
-        tests:
-          - not_null
-
-      - name: country_region_name
-        description: "The name of the country or region associated with the state or province."
-        tests:
-          - not_null
+      - name: reason_name_aggregated
+        description: "Aggregated sales reasons for each sales order."

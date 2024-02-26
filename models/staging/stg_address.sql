@@ -1,16 +1,16 @@
 with source_data as (
     select
-        a.addressid,
-        a.stateprovinceid,
-        a.city,
-        a.addressline1,
-        a.addressline2,
-        a.postalcode,
-        a.spatiallocation,
-        a.rowguid,
-        a.modifieddate
-    from {{ source('sap_adw', 'address') }} a
+        addressid
+        , stateprovinceid
+        , city
+        , addressline2
+        , modifieddate
+        , rowguid
+        , postalcode
+        , spatiallocation
+        , addressline1
+    from `adventureworksdesafiolh.dbt_rpires.address`
 )
-
 select *
 from source_data
+

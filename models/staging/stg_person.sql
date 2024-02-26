@@ -1,19 +1,17 @@
-with source_data as (
-    select
+WITH source_data AS (
+    SELECT
         businessentityid,
-        persontype,
-        namestyle,
         title,
         firstname,
         middlename,
         lastname,
+        persontype,
+        namestyle,
         suffix,
-        emailpromotion,
-        additionalcontactinfo,
-        demographics,
+        modifieddate,
         rowguid,
-        modifieddate
-    from {{ source('sap_adw', 'person') }}
+        emailpromotion
+    FROM `adventureworksdesafiolh.dbt_rpires.person` -- Replace with your actual project and dataset name
 )
-select *
-from source_data
+SELECT *
+FROM source_data

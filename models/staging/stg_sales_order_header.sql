@@ -1,31 +1,29 @@
-with source_data as (
-    select
+WITH source_data AS (
+    SELECT
         salesorderid,
-        revisionnumber,
-        orderdate,
-        duedate,
-        shipdate,
-        status,
+        shipmethodid,
+        billtoaddressid,
+        modifieddate,
+        rowguid,
+        taxamt,
+        shiptoaddressid,
         onlineorderflag,
-        purchaseordernumber,
-        accountnumber,
+        territoryid,
+        status AS order_status,
+        orderdate,
+        creditcardapprovalcode,
+        subtotal,
+        creditcardid,
+        currencyrateid,
+        revisionnumber,
+        freight,
+        duedate,
+        totaldue,
         customerid,
         salespersonid,
-        territoryid,
-        billtoaddressid,
-        shiptoaddressid,
-        shipmethodid,
-        creditcardid,
-        creditcardapprovalcode,
-        currencyrateid,
-        subtotal,
-        taxamt,
-        freight,
-        totaldue,
-        comment, 
-        rowguid,
-        modifieddate
-    from {{ source('sap_adw', 'salesorderheader') }} 
+        shipdate,
+        accountnumber
+    FROM `adventureworksdesafiolh.dbt_rpires.salesorderheader`
 )
-select *
-from source_data
+SELECT *
+FROM source_data

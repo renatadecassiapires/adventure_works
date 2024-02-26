@@ -1,14 +1,14 @@
-with source_data as (
-    select
+WITH source_data AS (
+    SELECT
         stateprovinceid,
-        stateprovincecode,
         countryregioncode,
-        isonlystateprovinceflag,
-        name,
-        territoryid,
+        modifieddate,
         rowguid,
-        modifieddate
-    from {{ source('sap_adw', 'stateprovince') }}
+        name AS state_name,
+        territoryid,
+        isonlystateprovinceflag,
+        stateprovincecode
+    FROM `adventureworksdesafiolh.dbt_rpires.stateprovince`
 )
-select *
-from source_data
+SELECT *
+FROM source_data

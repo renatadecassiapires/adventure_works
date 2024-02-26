@@ -1,16 +1,28 @@
-with region_data as (
-    select
-        sp.stateprovinceid as region_id,
-        sp.name as state_province_name,
-        cr.name as country_region_name
-    from {{ ref('stg_state_province') }} as sp
-    join {{ ref('stg_country_region') }} as cr
-    on sp.countryregioncode = cr.countryregioncode
+WITH stg_salesorderheadersalesreason AS (
+    SELECT *
+    FROM {{ ref('stg_salesorderheadersalesreason') }}
+),
+
+stg_salesreason AS (
+    SELECT *
+    FROM {{ ref('stg_salesreason') }}
+),
+
+reasonbyorderid AS (
+    SELECT
+        s.salesorderid,
+        r.reason_name
+    FROM stg_salesorderheadersalesreason s
+    LEFT JOIN stg_salesreason r ON s.salesreasonid = r.salesreasonid
+),
+
+transformed AS (
+    SELECT
+        salesorderid,
+        STRING_AGG(reason_name, ', ') AS reason_name_aggregated
+    FROM reasonbyorderid
+    GROUP BY salesorderid
 )
 
-select
-    row_number() over (order by region_id) as region_sk,
-    region_id,
-    state_province_name,
-    country_region_name
-from region_data
+SELECT *
+FROM transformed;
