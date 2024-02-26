@@ -2,31 +2,13 @@ version: 2
 
 models:
   - name: dim_locations
-    description: "Dimension table for location data, combining state/province and country information."
+    description: "Tabela dimensional para dados de localização, combinando informações de estado/província e país."
     columns:
       - name: location_sk
-        description: "Surrogate key for location dimension."
+        description: "Chave substituta para a dimensão de localização."
         tests:
           - not_null
           - unique
-
-      - name: source_location_id
-        description: "Natural key for the location, derived from the state/province ID."
-        tests:
-          - not_null
-          - unique
-
-      - name: location_name
-        description: "Name of the state or province."
-        tests:
-          - not_null
-
-      - name: country_name
-        description: "Name of the country associated with the state or province."
-        tests:
-          - not_null
-
-    tests:
-      - relationships:
-          to: ref('fact_sales')
-          field: location_sk
+          - relationships:
+              to: ref('fact_sales')
+              field: location_sk

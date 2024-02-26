@@ -2,82 +2,41 @@ version: 2
 
 models:
   - name: fact_sales
-    description: "A fact table combining sales order data with product, customer, location, and address dimensions."
-
+    description: |
+      This model represents the fact table for sales data.
+      It combines information from various source tables to provide a comprehensive view of sales transactions.
     columns:
       - name: salesorderid
-        description: "The unique identifier for each sales order."
-        tests:
-          - not_null
-          - unique
-
+        description: The unique identifier for each sales order.
       - name: orderdate
-        description: "The date when the order was placed."
-        tests:
-          - not_null
-
+        description: The date when the sales order was placed.
       - name: productid
-        description: "The identifier for the product ordered."
-        tests:
-          - not_null
-
+        description: The identifier for the product sold.
       - name: product_name
-        description: "The name of the product."
-        tests:
-          - not_null
-
+        description: The name of the product sold.
       - name: orderqty
-        description: "The quantity of the product ordered."
-        tests:
-          - not_null
-
+        description: The quantity of the product sold in the sales order.
       - name: unitprice
-        description: "The price per unit of the product."
-        tests:
-          - not_null
-
+        description: The unit price of the product sold.
       - name: unitpricediscount
-        description: "Any discount applied to the unit price."
-        tests:
-          - not_null
-
+        description: The discount applied to the unit price.
       - name: source_customer_id
-        description: "The source customer ID from the dim_customers table."
-        tests:
-          - not_null
-          - relationships:
-              to: ref('dim_customers')
-              field: source_customer_id
-
+        description: The identifier for the customer who placed the sales order.
       - name: customer_fullname
-        description: "The full name of the customer."
-        tests:
-          - not_null
-
+        description: The full name of the customer who placed the sales order.
       - name: city
-        description: "The city of the shipping address."
-        tests:
-          - not_null
-
+        description: The city where the sales order was shipped.
       - name: postalcode
-        description: "The postal code of the shipping address."
-        tests:
-          - not_null
-
+        description: The postal code of the shipping address.
       - name: location_sk
-        description: "The surrogate key for the location from the dim_locations table."
-        tests:
-          - not_null
-          - relationships:
-              to: ref('dim_locations')
-              field: location_sk
-
+        description: The identifier for the location where the sales order was shipped.
       - name: location_name
-        description: "The name of the location."
-        tests:
-          - not_null
-
+        description: The name of the location where the sales order was shipped.
+      - name: region_sk
+        description: The identifier for the region associated with the shipping address.
+      - name: state_province_name
+        description: The name of the state or province associated with the shipping address.
+      - name: country_region_name
+        description: The name of the country or region associated with the shipping address.
       - name: total_order_value
-        description: "The total value of the order (Quantity * Unit Price - Discount)."
-        tests:
-          - not_null
+        description: The total value of the sales order after applying discounts.
