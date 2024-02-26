@@ -1,5 +1,6 @@
 -- models/marts/dim_creditcard.sql
 
+CREATE OR REPLACE VIEW `adventureworksdesafiolh`.`dbt_rpires`.`dim_creditcard` AS
 SELECT 
     ROW_NUMBER() OVER (ORDER BY s.creditcardid) AS creditcard_sk,
     s.creditcardid,
