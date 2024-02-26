@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: dim_creditcards
+  - name: dim_creditcard
     description: "Dimensional table that stores information about credit cards used in sales transactions. It associates credit card details from the sales header with card types from the credit card staging table."
     columns:
       - name: creditcard_sk
