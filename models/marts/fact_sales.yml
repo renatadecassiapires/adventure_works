@@ -63,5 +63,5 @@ models:
       - model: dim_products
       - model: dim_customers
       - model: dim_locations
-      - model: dim_creditcards
+      - model: dim_creditcard
       - model: dim_regions

@@ -5,11 +5,11 @@ WITH customers AS (
     FROM {{ ref('dim_customers') }}
 ),
 
-creditcards AS (
+creditcard AS (
     SELECT
         creditcard_sk,
         creditcardid
-    FROM {{ ref('dim_creditcards') }}
+    FROM {{ ref('dim_creditcard') }}
 ),
 
 locations AS (
@@ -64,7 +64,7 @@ salesorderheader AS (
         h.orderdate
     FROM {{ ref('stg_salesorderheader') }} h
     LEFT JOIN customers c ON h.customerid = c.customerid
-    LEFT JOIN creditcards cc ON h.creditcardid = cc.creditcardid
+    LEFT JOIN creditcard cc ON h.creditcardid = cc.creditcardid
     LEFT JOIN locations l ON h.shiptoaddressid = l.shiptoaddressid
 )
 
