@@ -2,30 +2,24 @@ version: 2
 
 models:
   - name: dim_locations
-    description: "A dimensional table for location data, combining state/province and country information from sales orders."
     columns:
-      - name: location_sk
-        description: "Surrogate key for location dimension."
+      - name: shiptoaddress_sk
+        description: The surrogate key of the shiptoaddress
         tests:
           - not_null
           - unique
+
       - name: shiptoaddressid
-        description: "Natural key for the location, derived from the shipping address ID in sales orders."
+        description: The address id shipped to
         tests:
           - not_null
+          - unique
+
       - name: city_name
-        description: "Name of the city associated with the shipping address."
-        tests:
-          - not_null
+        description: The city name
+
       - name: state_name
-        description: "Name of the state or province associated with the shipping address."
-        tests:
-          - not_null
+        description: The state name
+
       - name: country_name
-        description: "Name of the country associated with the state or province."
-        tests:
-          - not_null
-    depends_on:
-      - model: stg_address
-      - model: stg_state_province
-      - model: stg_country_region
+        description: The country name

@@ -1,12 +1,9 @@
--- models/staging/stg_countryregion.sql
-
-CREATE OR REPLACE VIEW `adventureworksdesafiolh`.`dbt_rpires`.`stg_countryregion` AS
-WITH source_data AS (
-    SELECT
-        countryregioncode,
-        modifieddate,
-        name AS country_name
-    FROM `adventureworksdesafiolh.dbt_rpires.countryregion`
+with source_data as (
+    select
+        countryregioncode
+        , modifieddate
+        , name as country_name
+    from {{ source('sap_adw', 'countryregion') }}
 )
-SELECT *
-FROM source_data;
+select *
+from source_data

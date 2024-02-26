@@ -1,17 +1,23 @@
--- models/marts/dim_creditcard.sql
+with stg_salesorderheader as (
+    select 
+        distinct(creditcardid)
+    from {{ref('stg_salesorderheader')}}
+    where creditcardid is not null
+)
 
-CREATE OR REPLACE VIEW `adventureworksdesafiolh`.`dbt_rpires`.`dim_creditcard` AS
-SELECT 
-    ROW_NUMBER() OVER () AS creditcard_sk,
-    s.creditcardid,
-    c.cardtype,
-    c.cardnumber,
-    c.expmonth,
-    c.expyear,
-    TIMESTAMP(c.modifieddate) AS modifieddate
-FROM 
-    `adventureworksdesafiolh.dbt_rpires.stg_salesorderheader` s
-LEFT JOIN 
-    `adventureworksdesafiolh.dbt_rpires.stg_creditcard` c ON s.creditcardid = c.creditcardid
-WHERE 
-    s.creditcardid IS NOT NULL;
+, stg_creditcard as (
+    select *
+    from {{ref('stg_creditcard')}}
+)
+
+, transformed as (
+    select 
+        row_number() over (order by stg_salesorderheader.creditcardid) as creditcard_sk -- auto-incremental surrogate key	
+        , stg_salesorderheader.creditcardid
+        , stg_creditcard.cardtype
+    from stg_salesorderheader 
+    left join stg_creditcard on stg_salesorderheader.creditcardid = stg_creditcard.creditcardid
+)
+
+select *
+from transformed

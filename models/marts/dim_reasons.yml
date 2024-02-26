@@ -2,14 +2,15 @@ version: 2
 
 models:
   - name: dim_reasons
-    description: "A dimensional table that aggregates sales reasons for each sales order."
     columns:
       - name: salesorderid
-        description: "The unique identifier for each sales order."
+        description: The natural key of the sale
         tests:
-          - not_null
           - unique
+          - not_null
+
       - name: reason_name_aggregated
-        description: "Aggregated sales reasons for each sales order."
+        description: reasons for the salesorderid. When there is more than one reason per id, reasons are aggregated in one row  
         tests:
           - not_null
+

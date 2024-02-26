@@ -1,29 +1,29 @@
-WITH stg_salesorderheadersalesreason AS (
-    SELECT *
-    FROM {{ ref('stg_salesorderheadersalesreason') }}
-),
-
-stg_salesreason AS (
-    SELECT *
-    FROM {{ ref('stg_salesreason') }}
-),
-
-reasonbyorderid AS (
-    SELECT 
-        so.salesorderid,
-        sr.reason_name
-    FROM stg_salesorderheadersalesreason so
-    LEFT JOIN stg_salesreason sr ON so.salesreasonid = sr.salesreasonid 
-),
-
-transformed AS (
-    SELECT
-        salesorderid,
-        -- Utilize STRING_AGG para BigQuery ou a função equivalente no seu banco de dados para agrupar os nomes das razões
-        STRING_AGG(reason_name, ', ') AS reason_name_aggregated
-    FROM reasonbyorderid
-    GROUP BY salesorderid
+with stg_salesorderheadersalesreason as (
+    select *
+    from {{ref('stg_salesorderheadersalesreason')}}
 )
 
-SELECT *
-FROM transformed
+, stg_salesreason as (
+    select *
+    from {{ref('stg_salesreason')}}
+)
+
+, reasonbyorderid as (
+    select 
+        stg_salesorderheadersalesreason.salesorderid
+        , stg_salesreason.reason_name as reason_name
+    from stg_salesorderheadersalesreason
+    left join stg_salesreason on stg_salesorderheadersalesreason.salesreasonid = stg_salesreason.salesreasonid 
+)
+
+, transformed as (
+    select
+        salesorderid
+        -- function used to aggregate in one row any multiple reasons attributed to a single salesorderid
+        , string_agg(reason_name, ', ') as reason_name_aggregated
+    from reasonbyorderid
+    group by salesorderid
+)
+
+select *
+from transformed
