@@ -1,9 +1,8 @@
 with source_data as (
     select
-        countryregioncode,
-        name,
-        modifieddate
-    from {{ source('sap_adw', 'countryregion') }}
-)
+        countryregioncode
+        , modifieddate
+        , name as country_name
+    from `adventureworksdesafiolh.dbt_rpires.countryregion`
 select *
 from source_data

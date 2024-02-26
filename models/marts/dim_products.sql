@@ -1,34 +1,28 @@
-with source_data as (
-    select
-        p.productid as source_product_id,
-        p.name as product_name,
-        p.productnumber,
-        max(p.standardcost) as standardcost,
-        max(p.listprice) as listprice,
-        max(p.size) as size,
-        max(p.color) as color,
-        max(p.weight) as weight,
-        max(p.productsubcategoryid) as productsubcategoryid,
-        max(p.productmodelid) as productmodelid,
-        max(p.sellstartdate) as sellstartdate,
-        max(p.sellenddate) as sellenddate,
-    from {{ ref('stg_product') }} p
-    left join {{ ref('stg_sales_order_detail') }} sod on p.productid = sod.productid
-    group by p.productid, p.name, p.productnumber
+WITH stg_salesorderheader AS (
+    SELECT *
+    FROM {{ ref('stg_salesorderheader') }}
+),
+
+stg_salesorderdetail AS (
+    SELECT DISTINCT
+        productid
+    FROM {{ ref('stg_salesorderdetail') }}
+    WHERE productid IS NOT NULL
+),
+
+stg_product AS (
+    SELECT *
+    FROM {{ ref('stg_product') }}
+),
+
+transformed AS (
+    SELECT
+        ROW_NUMBER() OVER (ORDER BY s.productid) AS product_sk, -- Chave substituta autoincremental
+        s.productid,
+        p.product_name
+    FROM stg_salesorderdetail s
+    LEFT JOIN stg_product p ON s.productid = p.productid
 )
 
-select
-    row_number() over (order by source_product_id) as product_sk, 
-    source_product_id,
-    product_name,
-    productnumber,
-    standardcost,
-    listprice,
-    size,
-    color,
-    weight,
-    productsubcategoryid,
-    productmodelid,
-    sellstartdate,
-    sellenddate
-from source_data
+SELECT *
+FROM transformed;

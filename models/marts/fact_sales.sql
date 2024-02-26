@@ -1,75 +1,84 @@
-with 
-sales_order_header as (
-    select *
-    from `adventureworksdesafiolh`.`dbt_rpires`.`stg_sales_order_header`
-),
-sales_order_detail as (
-    select 
-        distinct salesorderid,
-        productid,
-        orderqty,
-        unitprice,
-        unitpricediscount
-    from `adventureworksdesafiolh`.`dbt_rpires`.`stg_sales_order_detail`
-),
-customers as (
-    select 
+WITH customers AS (
+    SELECT
         customer_sk,
-        source_customer_id,
-        fullname as customer_fullname
-    from `adventureworksdesafiolh`.`dbt_rpires`.`dim_customers`
+        customerid
+    FROM {{ ref('dim_customers') }}
 ),
-products as (
-    select 
+
+creditcards AS (
+    SELECT
+        creditcard_sk,
+        creditcardid
+    FROM {{ ref('dim_creditcards') }}
+),
+
+locations AS (
+    SELECT
+        shiptoaddress_sk,
+        shiptoaddressid
+    FROM {{ ref('dim_locations') }}
+),
+
+reasons AS (
+    SELECT
+        salesorderid,
+        reason_name_aggregated
+    FROM {{ ref('dim_reasons') }}
+),
+
+products AS (
+    SELECT
         product_sk,
-        source_product_id,
-        product_name
-    from `adventureworksdesafiolh`.`dbt_rpires`.`dim_products`
+        productid
+    FROM {{ ref('dim_products') }}
 ),
-address as (
-    select
-        addressid,
-        city,
-        postalcode,
-        stateprovinceid
-    from `adventureworksdesafiolh`.`dbt_rpires`.`stg_address`
+
+salesorderdetail AS (
+    SELECT
+        d.salesorderid,
+        p.product_sk AS product_fk,
+        d.orderqty,
+        d.unitprice,
+        d.unitprice * d.orderqty AS revenue_wo_taxandfreight,
+        IFNULL(r.reason_name_aggregated, 'Not indicated') AS reason_name_final
+    FROM {{ ref('stg_salesorderdetail') }} d
+    LEFT JOIN products p ON d.productid = p.productid
+    LEFT JOIN reasons r ON d.salesorderid = r.salesorderid
 ),
-regions as (
-    select 
-        region_sk,
-        region_id,
-        state_province_name,
-        country_region_name
-    from `adventureworksdesafiolh`.`dbt_rpires`.`dim_region`
+
+salesorderheader AS (
+    SELECT
+        h.salesorderid,
+        c.customer_sk AS customer_fk,
+        cc.creditcard_sk AS creditcard_fk,
+        l.shiptoaddress_sk AS shiptoadress_fk,
+        CASE 
+            WHEN h.order_status = 1 THEN 'In_process'
+            WHEN h.order_status = 2 THEN 'Approved'
+            WHEN h.order_status = 3 THEN 'Backordered' 
+            WHEN h.order_status = 4 THEN 'Rejected' 
+            WHEN h.order_status = 5 THEN 'Shipped'
+            WHEN h.order_status = 6 THEN 'Cancelled' 
+            ELSE 'no_status'
+        END AS order_status_name,
+        h.orderdate
+    FROM {{ ref('stg_salesorderheader') }} h
+    LEFT JOIN customers c ON h.customerid = c.customerid
+    LEFT JOIN creditcards cc ON h.creditcardid = cc.creditcardid
+    LEFT JOIN locations l ON h.shiptoaddressid = l.shiptoaddressid
 )
-select
-    soh.salesorderid,
-    soh.orderdate,
-    sod.productid,
-    prod.product_name,
-    sod.orderqty,
-    sod.unitprice,
-    sod.unitpricediscount,
-    cust.source_customer_id,
-    cust.customer_fullname,
-    addr.city,
-    addr.postalcode,
-    loc.location_sk,
-    loc.location_name,
-    reg.region_sk, 
-    reg.country_region_name,
-    (sod.orderqty * sod.unitprice) - sod.unitpricediscount as total_order_value
-from 
-    sales_order_header soh
-left join 
-    sales_order_detail sod on soh.salesorderid = sod.salesorderid
-left join 
-    customers cust on soh.customerid = cust.source_customer_id
-left join 
-    `adventureworksdesafiolh`.`dbt_rpires`.`dim_locations` loc on soh.shiptoaddressid = loc.location_sk
-left join 
-    products prod on sod.productid = prod.source_product_id
-left join 
-    address addr on soh.shiptoaddressid = addr.addressid
-left join 
-    regions reg on addr.stateprovinceid = reg.region_sk
+
+SELECT
+    d.salesorderid,
+    d.product_fk,
+    h.customer_fk,
+    h.shiptoadress_fk,
+    h.creditcard_fk,
+    d.unitprice,
+    d.orderqty,
+    d.revenue_wo_taxandfreight,
+    d.reason_name_final,
+    h.orderdate,
+    h.order_status_name
+FROM salesorderdetail d
+JOIN salesorderheader h ON d.salesorderid = h.salesorderid;

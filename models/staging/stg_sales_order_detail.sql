@@ -1,17 +1,15 @@
-with source_data as (
-    select
+WITH source_data AS (
+    SELECT
         salesorderid,
-        salesorderdetailid,
-        carriertrackingnumber,
         orderqty,
-        productid,
-        specialofferid,
+        salesorderdetailid,
         unitprice,
-        unitpricediscount,
+        specialofferid,
+        modifieddate,
         rowguid,
-        modifieddate
-    from {{ source('sap_adw', 'salesorderdetail') }}
+        productid,
+        unitpricediscount
+    FROM `adventureworksdesafiolh.dbt_rpires.salesorderdetail`
 )
-select *
-from source_data
-
+SELECT *
+FROM source_data

@@ -1,31 +1,26 @@
-with source_data as (
-    select
+WITH source_data AS (
+    SELECT
         productid,
-        name,
-        productnumber,
-        makeflag,
-        finishedgoodsflag,
-        color,
+        name AS product_name,
         safetystocklevel,
+        finishedgoodsflag,
+        class,
+        makeflag,
+        productnumber,
         reorderpoint,
-        standardcost,
-        listprice,
-        size,
-        sizeunitmeasurecode,
+        modifieddate,
+        rowguid,
+        productmodelid,
         weightunitmeasurecode,
-        weight,
+        standardcost,
+        productsubcategoryid,
+        listprice,
         daystomanufacture,
         productline,
-        class,
-        style,
-        productsubcategoryid,
-        productmodelid,
+        color,
         sellstartdate,
-        sellenddate,
-        discontinueddate,
-        rowguid,
-        modifieddate
-    from {{ source('sap_adw', 'product') }}
+        weight AS product_weight
+    FROM `adventureworksdesafiolh.dbt_rpires.product`
 )
-select *
-from source_data
+SELECT *
+FROM source_data
