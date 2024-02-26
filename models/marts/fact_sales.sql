@@ -1,4 +1,3 @@
-create or replace view `adventureworksdesafiolh`.`dbt_rpires`.`fact_sales` as
 with 
 sales_order_header as (
     select *
@@ -32,7 +31,7 @@ address as (
         addressid,
         city,
         postalcode,
-        stateprovinceid  -- Adicionando a coluna stateprovinceid
+        stateprovinceid
     from `adventureworksdesafiolh`.`dbt_rpires`.`stg_address`
 ),
 regions as (
@@ -57,10 +56,8 @@ select
     addr.postalcode,
     loc.location_sk,
     loc.location_name,
-    reg.region_sk,
-    reg.state_province_name,
+    reg.region_sk, 
     reg.country_region_name,
-    -- Cálculo do valor total do pedido (Quantidade * Preço Unitário - Desconto)
     (sod.orderqty * sod.unitprice) - sod.unitpricediscount as total_order_value
 from 
     sales_order_header soh
@@ -75,5 +72,4 @@ left join
 left join 
     address addr on soh.shiptoaddressid = addr.addressid
 left join 
-    regions reg on addr.stateprovinceid = reg.state_province_id
-
+    regions reg on addr.stateprovinceid = reg.region_sk

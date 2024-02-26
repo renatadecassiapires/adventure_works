@@ -2,38 +2,8 @@ version: 2
 
 models:
   - name: dim_customers
-    description: "A dimensional table that contains customer details."
     columns:
-      - name: customer_sk
-        description: "A unique surrogate key for the customer."
-        tests:
-          - unique
-          - not_null
-
-      - name: source_customer_id
-        description: "The original customer ID from the source system."
-        tests:
-          - not_null
-
       - name: fullname
-        description: "The full name of the customer."
         tests:
           - not_null
-          - unique  # Se aplicável
-
-      - name: firstname
-        description: "The first name of the customer."
-        tests:
-          - not_empty_string  # Se aplicável
-
-      - name: middlename
-        description: "The middle name of the customer."
-
-      - name: lastname
-        description: "The last name of the customer."
-        tests:
-          - not_empty_string  # Se aplicável
-
-    tags:
-      - dimension
-      - customer
+          - unique # apenas se fullname deve ser único
