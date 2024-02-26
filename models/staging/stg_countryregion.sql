@@ -1,5 +1,6 @@
 -- models/staging/stg_countryregion.sql
 
+CREATE OR REPLACE VIEW `adventureworksdesafiolh`.`dbt_rpires`.`stg_countryregion` AS
 WITH source_data AS (
     SELECT
         countryregioncode,

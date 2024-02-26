@@ -1,5 +1,6 @@
 -- models/marts/dim_customers.sql
 
+CREATE OR REPLACE VIEW `adventureworksdesafiolh`.`dbt_rpires`.`dim_customers` AS
 WITH stg_customer AS (
     SELECT 
         customerid,
