@@ -1,5 +1,3 @@
-version: 2
-
 models:
   - name: dim_regions
     description: "A dimensional table aggregating sales reasons for each sales order."
@@ -11,3 +9,5 @@ models:
           - unique
       - name: reason_name_aggregated
         description: "Aggregated sales reasons for each sales order."
+    depends_on:
+      - model: stg_sales_order_header_sales_reason.sql

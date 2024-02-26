@@ -59,3 +59,9 @@ models:
         description: "Status of the sales order (e.g., 'Approved', 'In process', 'Shipped')."
         tests:
           - not_null
+    depends_on:
+      - model: dim_products
+      - model: dim_customers
+      - model: dim_locations
+      - model: dim_creditcards
+      - model: dim_regions

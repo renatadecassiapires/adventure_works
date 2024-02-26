@@ -25,3 +25,7 @@ models:
         description: "Name of the country associated with the state or province."
         tests:
           - not_null
+    depends_on:
+      - model: stg_address
+      - model: stg_state_province
+      - model: stg_country_region
