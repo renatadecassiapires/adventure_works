@@ -10,4 +10,4 @@ models:
       - name: reason_name_aggregated
         description: "Aggregated sales reasons for each sales order."
     depends_on:
-      - model: stg_sales_order_header_sales_reason.sql
+      - model: stg_salesorderheadersalesreason.sql

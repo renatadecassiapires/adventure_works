@@ -3,8 +3,7 @@ version: 2
 sources:
   - name: sap_adw
     schema: dbt_rpires
-    description: >
-      This source contains data extracted from the SAP system and stored in the analytics data warehouse.
+    description: This source contains data extracted from the SAP system and stored in the analytics data warehouse.
       It includes information on addresses, regions, credit card transactions, customers, products, sales order details, and more.
       The data is refreshed daily and reflects the operational and sales status of the company.
 
