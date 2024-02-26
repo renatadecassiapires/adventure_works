@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: dim_reasons
+    description: "A dimensional table that aggregates sales reasons for each sales order."
+    columns:
+      - name: salesorderid
+        description: "The unique identifier for each sales order."
+        tests:
+          - not_null
+          - unique
+      - name: reason_name_aggregated
+        description: "Aggregated sales reasons for each sales order."
+        tests:
+          - not_null
