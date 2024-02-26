@@ -3,16 +3,33 @@ version: 2
 sources:
   - name: sap_adw
     schema: dbt_rpires
+    description: >
+      This source contains data extracted from the SAP system and stored in the analytics data warehouse.
+      It includes information on addresses, regions, credit card transactions, customers, products, sales order details, and more.
+      The data is refreshed daily and reflects the operational and sales status of the company.
+
     tables:
       - name: address
+        description: "Contains address details for customers, stores, and employees."
       - name: countryregion
+        description: "List of countries and regions where the company operates."
       - name: creditcard
+        description: "Credit card transaction information for customers."
       - name: customer
+        description: "Demographic and transactional data of customers."
       - name: person
+        description: "Personal information of customers and employees."
       - name: product
+        description: "Details of products offered by the company, including price and category."
       - name: salesorderdetail
+        description: "Details of individual items in each sales order."
       - name: salesorderheader
+        description: "Header data for each sales order, including customer information and sales totals."
       - name: salesorderheadersalesreason
+        description: "Relates sales orders to sales reasons for marketing analysis purposes."
       - name: salesreason
+        description: "Reasons for customers' purchases, used for marketing analysis."
       - name: stateprovince
+        description: "Information on states and provinces, used for addressing and geographic segmentation."
       - name: store
+        description: "Data about physical stores, including location and sales performance."
