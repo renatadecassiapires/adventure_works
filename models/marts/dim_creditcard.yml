@@ -1,21 +1,18 @@
 version: 2
 
 models:
-  - name: dim_creditcard
-    description: "Dimensional table that stores information about credit cards used in sales transactions. It associates credit card details from the sales header with card types from the credit card staging table."
+  - name: dim_creditcards
     columns:
       - name: creditcard_sk
-        description: "Auto-incremental surrogate key to uniquely identify each credit card."
+        description: The surrogate key of the creditcard id
         tests:
-          - not_null
+          - not_null   
       - name: creditcardid
-        description: "Natural key of the credit card. Uniquely identifies the credit card in the source system."
+        description: The natural key of the creditcard
         tests:
-          - unique
-          - not_null
+          - unique 
+          - not_null 
       - name: cardtype
-        description: "Type of the credit card (e.g., Visa, MasterCard, etc.)."
+        description: The card name
         tests:
           - not_null
-    depends_on:
-      - model: stg_creditcard

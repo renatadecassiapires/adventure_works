@@ -2,19 +2,18 @@ version: 2
 
 models:
   - name: dim_products
-    description: "A dimensional table for product information, sourced from sales order details."
     columns:
-      - name: product_sk
-        description: "Surrogate key for the product dimension."
+      - name: product_sk 
+        description: The surrogate key of the product
         tests:
           - not_null
           - unique
-      - name: productid
-        description: "Natural key for the product, sourced from sales order details."
+      - name: productid 
+        description: The natural key of the product
         tests:
           - not_null
           - unique
-      - name: product_name
-        description: "Name of the product."
+      - name: product_name 
+        description: The product name
         tests:
-          - not_null
+          - not_null        

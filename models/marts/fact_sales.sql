@@ -1,84 +1,94 @@
-WITH customers AS (
-    SELECT
-        customer_sk,
-        customerid
-    FROM {{ ref('dim_customers') }}
-),
-
-creditcard AS (
-    SELECT
-        creditcard_sk,
-        creditcardid
-    FROM {{ ref('dim_creditcard') }}
-),
-
-locations AS (
-    SELECT
-        shiptoaddress_sk,
-        shiptoaddressid
-    FROM {{ ref('dim_locations') }}
-),
-
-reasons AS (
-    SELECT
-        salesorderid,
-        reason_name_aggregated
-    FROM {{ ref('dim_reasons') }}
-),
-
-products AS (
-    SELECT
-        product_sk,
-        productid
-    FROM {{ ref('dim_products') }}
-),
-
-salesorderdetail AS (
-    SELECT
-        d.salesorderid,
-        p.product_sk AS product_fk,
-        d.orderqty,
-        d.unitprice,
-        d.unitprice * d.orderqty AS revenue_wo_taxandfreight,
-        IFNULL(r.reason_name_aggregated, 'Not indicated') AS reason_name_final
-    FROM {{ ref('stg_salesorderdetail') }} d
-    LEFT JOIN products p ON d.productid = p.productid
-    LEFT JOIN reasons r ON d.salesorderid = r.salesorderid
-),
-
-salesorderheader AS (
-    SELECT
-        h.salesorderid,
-        c.customer_sk AS customer_fk,
-        cc.creditcard_sk AS creditcard_fk,
-        l.shiptoaddress_sk AS shiptoadress_fk,
-        CASE 
-            WHEN h.order_status = 1 THEN 'In_process'
-            WHEN h.order_status = 2 THEN 'Approved'
-            WHEN h.order_status = 3 THEN 'Backordered' 
-            WHEN h.order_status = 4 THEN 'Rejected' 
-            WHEN h.order_status = 5 THEN 'Shipped'
-            WHEN h.order_status = 6 THEN 'Cancelled' 
-            ELSE 'no_status'
-        END AS order_status_name,
-        h.orderdate
-    FROM {{ ref('stg_salesorderheader') }} h
-    LEFT JOIN customers c ON h.customerid = c.customerid
-    LEFT JOIN creditcard cc ON h.creditcardid = cc.creditcardid
-    LEFT JOIN locations l ON h.shiptoaddressid = l.shiptoaddressid
+with customers as (
+    select
+        customer_sk
+        , customerid
+    from {{ref('dim_customers')}} 
 )
 
-SELECT
-    d.salesorderid,
-    d.product_fk,
-    h.customer_fk,
-    h.shiptoadress_fk,
-    h.creditcard_fk,
-    d.unitprice,
-    d.orderqty,
-    d.revenue_wo_taxandfreight,
-    d.reason_name_final,
-    h.orderdate,
-    h.order_status_name
-FROM salesorderdetail d
-JOIN salesorderheader h ON d.salesorderid = h.salesorderid;
+, creditcards as (
+    select
+        creditcard_sk
+        , creditcardid
+    from {{ref('dim_creditcard')}}
+)
+
+, locations as (
+    select
+        shiptoaddress_sk
+        , shiptoaddressid
+    from {{ref('dim_locations')}}
+)
+
+, reasons as (
+    select
+        salesorderid
+        , reason_name_aggregated
+    from {{ref('dim_reasons')}}
+)
+
+, products as (
+    select
+        product_sk
+        , productid
+    from {{ref('dim_products')}}
+)
+
+, salesorderdetail as (
+    select
+        stg_salesorderdetail.salesorderid
+        , products.product_sk as product_fk
+        , stg_salesorderdetail.productid
+        , stg_salesorderdetail.orderqty
+        , stg_salesorderdetail.unitprice
+        , stg_salesorderdetail.unitprice * stg_salesorderdetail.orderqty  AS  revenue_wo_taxandfreight
+        -- Sales reason (a dimension) was attached to the fact table due to a data studio limit on allowed merges
+        -- Attributing 'Not indicated' if there is no sales reason indicated
+        , ifnull(reasons.reason_name_aggregated,'Not indicated') as reason_name_final
+    from {{ref('stg_salesorderdetail')}} stg_salesorderdetail
+    left join products on stg_salesorderdetail.productid = products.productid
+    left join reasons on stg_salesorderdetail.salesorderid = reasons.salesorderid
+)
+
+, salesorderheader as (
+    select
+        salesorderid
+        , customers.customer_sk as customer_fk
+        , creditcards.creditcard_sk as creditcard_fk
+        , locations.shiptoaddress_sk as shiptoadress_fk
+        -- Description added to order_status based on column descriptions in PostgreSQL.  
+        , CASE 
+            WHEN order_status = 1 THEN 'In_process'
+            WHEN order_status = 2 THEN 'Approved'
+            WHEN order_status = 3 THEN 'Backordered' 
+            WHEN order_status = 4 THEN 'Rejected' 
+            WHEN order_status = 5 THEN 'Shipped'
+            WHEN order_status = 6 THEN 'Cancelled' 
+            ELSE 'no_status'
+        end as order_status_name
+        , orderdate
+    from {{ref('stg_salesorderheader')}} 
+    left join customers on stg_salesorderheader.customerid = customers.customerid
+    left join creditcards on stg_salesorderheader.creditcardid = creditcards.creditcardid
+    left join locations on stg_salesorderheader.shiptoaddressid = locations.shiptoaddressid
+)
+
+/* We then join salesorderdetail and salesorderheader to get the final fact table*/
+, final as (
+    select
+        salesorderdetail.salesorderid
+        , salesorderdetail.product_fk
+        , salesorderheader.customer_fk
+        , salesorderheader.shiptoadress_fk
+        , salesorderheader.creditcard_fk
+        , salesorderdetail.unitprice
+        , salesorderdetail.orderqty
+        , salesorderdetail.revenue_wo_taxandfreight
+        , salesorderdetail.reason_name_final
+        , salesorderheader.orderdate
+        , salesorderheader.order_status_name
+    from salesorderdetail
+    left join salesorderheader on salesorderdetail.salesorderid = salesorderheader.salesorderid
+)
+
+select *
+from final

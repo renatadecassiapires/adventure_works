@@ -1,40 +1,43 @@
--- models/marts/dim_customers.sql
-
-CREATE OR REPLACE VIEW `adventureworksdesafiolh`.`dbt_rpires`.`dim_customers` AS
-WITH stg_customer AS (
-    SELECT 
-        customerid,
-        personid,
-        storeid
-    FROM `adventureworksdesafiolh.dbt_rpires.stg_customer`
-),
-stg_person AS (
-    SELECT
-        businessentityid,
-        CONCAT(IFNULL(firstname, ''), ' ', IFNULL(middlename, ''), ' ', IFNULL(lastname, '')) AS fullname
-    FROM `adventureworksdesafiolh.dbt_rpires.stg_person`
-),
-stg_store AS (
-    SELECT
-        businessentityid AS storebusinessentityid,
-        store_name
-    FROM `adventureworksdesafiolh.dbt_rpires.stg_store`
-),
-transformed AS (
-    SELECT
-        ROW_NUMBER() OVER (ORDER BY stg_customer.customerid) AS customer_sk,
-        stg_customer.customerid,
-        stg_person.businessentityid,
-        stg_person.fullname,
-        stg_store.storebusinessentityid,
-        stg_store.store_name,
-        CASE
-            WHEN stg_person.fullname IS NULL THEN stg_store.store_name
-            ELSE stg_person.fullname 
-        END AS customer_fullname
-    FROM stg_customer
-    LEFT JOIN stg_person ON stg_customer.personid = stg_person.businessentityid
-    LEFT JOIN stg_store ON stg_customer.storeid = stg_store.storebusinessentityid
+with stg_customer as (
+    select 
+        customerid
+        , personid
+        , storeid
+    from {{ref('stg_customer')}}
 )
-SELECT *
-FROM transformed;
+
+, stg_person as (
+    select
+        businessentityid
+        -- Adopted function concat() to concatenate first, middle and lastnames
+        , concat(ifnull(firstname,' '),' ',ifnull(middlename,' '),' ',ifnull(lastname,' ')) as fullname
+    from {{ref('stg_person')}}
+)
+
+, stg_store as (
+    select
+        businessentityid as storebusinessentityid
+        , storename
+    from {{ref('stg_store')}}
+)
+
+, transformed as (
+    select
+    row_number() over (order by stg_customer.customerid) as customer_sk -- auto-incremental surrogate key    
+    , stg_customer.customerid
+    , stg_person.businessentityid
+    , stg_person.fullname
+    , stg_store.storebusinessentityid
+    , stg_store.storename
+    , case
+        --for every customerid, when there is no customer name related to the customerid, a store name is set
+        when stg_person.fullname is null
+        then stg_store.storename
+        else stg_person.fullname 
+        end as customer_fullname
+    from stg_customer
+    left join stg_person on stg_customer.personid = stg_person.businessentityid
+    left join stg_store on stg_customer.storeid = stg_store.storebusinessentityid
+)
+select *
+from transformed
