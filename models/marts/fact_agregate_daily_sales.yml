@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: fact_aggregate_daily_sales
+    description: "A table that aggregates sales data by salesperson and location on a daily basis."
+    columns:
+      - name: salespersonid
+        description: "The identifier for the salesperson."
+        tests:
+          - not_null
+
+      - name: firstname
+        description: "The first name of the salesperson."
+        tests:
+          - not_null
+
+      - name: lastname
+        description: "The last name of the salesperson."
+        tests:
+          - not_null
+
+      - name: city_name
+        description: "The name of the city for the shipping address."
+        tests:
+          - not_null
+
+      - name: state_name
+        description: "The name of the state for the shipping address."
+        tests:
+          - not_null
+
+      - name: country_name
+        description: "The name of the country for the shipping address."
+        tests:
+          - not_null
+
+      - name: total_sales
+        description: "The total sales amount aggregated by salesperson and location."
+        tests:
+          - not_null
+
+      - name: total_orders
+        description: "The total number of orders aggregated by salesperson and location."
+        tests:
+          - not_null
