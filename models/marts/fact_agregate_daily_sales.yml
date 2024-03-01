@@ -43,3 +43,8 @@ models:
         description: "The total number of orders aggregated by salesperson and location."
         tests:
           - not_null
+      
+      - name: orderdate
+        description: "The date of the sales order."
+        tests:
+          - not_null
