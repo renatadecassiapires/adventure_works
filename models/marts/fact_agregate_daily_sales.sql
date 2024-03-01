@@ -57,4 +57,5 @@ select
     country_name,
     total_sales,
     total_orders
+    orderdate
 from aggregated_sales
