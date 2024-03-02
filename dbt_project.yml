@@ -36,7 +36,21 @@ clean-targets:         # directories to be removed by `dbt clean`
 # using the `{{ config(...) }}` macro.
 
 models:
-  my_new_project:
-    # Applies to all files under models/example/
-    example:
-      +materialized: table
+  desafio_lighthouse_adventure_works:
+    staging:
+      +materialized: view  # ou 'table' se você deseja que estes modelos sejam tabelas
+      # Configurações específicas para modelos dentro de 'staging'
+      stg_address:
+        +materialized: view  # Este modelo será uma view
+      stg_customer:
+        +materialized: view  # Este modelo será uma view
+      # Adicione configurações para os outros modelos conforme necessário
+      
+    marts:
+      +materialized: table  # marts geralmente são materializados como tabelas
+      # Configurações específicas para modelos dentro de 'marts'
+      dim_customer:
+        +materialized: table  # Este modelo será uma tabela
+      fact_sales:
+        +materialized: table  # Este modelo será uma tabela
+  

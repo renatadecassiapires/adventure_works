@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: fact_daily_sales_metrics
+    columns:
+      - name: orderdate
+        description: "Data do pedido"
+      - name: num_orders
+        description: "Número total de pedidos realizados no dia"
+      - name: total_sales
+        description: "Total de vendas realizadas no dia"
+      - name: avg_order_value
+        description: "Valor médio dos pedidos realizados no dia"
+      - name: avg_products_per_order
+        description: "Quantidade média de produtos por pedido no dia"
+      - name: conversion_rate
+        description: "Taxa de conversão de pedidos no dia"
+    meta:
+      materialized: table
+      schema: aggregated_tables
+    description: "Tabela contendo métricas diárias de vendas"
