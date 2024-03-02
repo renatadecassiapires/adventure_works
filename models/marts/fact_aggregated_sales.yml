@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: fact_aggegate_sales
+    columns:
+      - name: salespersonid
+        description: "ID do vendedor"
+      - name: firstname
+        description: "Primeiro nome do vendedor"
+      - name: lastname
+        description: "Último nome do vendedor"
+      - name: city_name
+        description: "Nome da cidade"
+      - name: state_name
+        description: "Nome do estado"
+      - name: country_name
+        description: "Nome do país"
+      - name: total_sales
+        description: "Total de vendas realizadas pelo vendedor"
+      - name: total_orders
+        description: "Número total de pedidos realizados pelo vendedor"
+      - name: orderdate
+        description: "Data do pedido"
+      - name: order_date
+        description: "Data do pedido em formato de data"
+    meta:
+      materialized: table
+      schema: aggregated_tables
+    description: "Tabela contendo métricas agregadas de vendas por vendedor e localização"
+

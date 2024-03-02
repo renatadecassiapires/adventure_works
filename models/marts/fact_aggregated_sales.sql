@@ -1,15 +1,20 @@
-{{ config(materialized='table', schema='aggregated_tables') }}
+-- models/marts/fact_aggregated_sales.sql
+
+{{ config(
+    materialized='table',
+    schema='aggregated_tables'
+) }}
 
 with sales_data as (
     select
         soh.salespersonid,
         soh.shiptoaddressid,
         f.salesorderid,
-        f.unitprice,
-        f.orderqty,
+        cast(f.unitprice as numeric) as unitprice,  
+        cast(f.orderqty as numeric) as orderqty,  
         f.orderdate
-    from {{ ref('fact_sales') }} f
-    join {{ ref('stg_salesorderheader') }} soh
+    from `adventureworksdesafiolh`.`dbt_rpires`.`fact_sales` f
+    join `adventureworksdesafiolh`.`dbt_rpires`.`stg_salesorderheader` soh
         on f.salesorderid = soh.salesorderid
 ),
 
@@ -19,7 +24,7 @@ location_data as (
         loc.city_name,
         loc.state_name,
         loc.country_name
-    from {{ ref('dim_locations') }} loc
+    from `adventureworksdesafiolh`.`dbt_rpires`.`dim_locations` loc
 ),
 
 salesperson_data as (
@@ -27,12 +32,13 @@ salesperson_data as (
         p.businessentityid as salespersonid,
         p.firstname,
         p.lastname
-    from {{ ref('stg_person') }} p
+    from `adventureworksdesafiolh`.`dbt_rpires`.`stg_person` p
 ),
 
 aggregated_sales as (
     select
         sd.salespersonid,
+        sd.orderdate,  
         ld.city_name,
         ld.state_name,
         ld.country_name,
@@ -45,7 +51,7 @@ aggregated_sales as (
         on sd.shiptoaddressid = ld.location_sk
     join salesperson_data sp
         on sd.salespersonid = sp.salespersonid
-    group by sd.salespersonid, ld.city_name, ld.state_name, ld.country_name, sp.firstname, sp.lastname
+    group by sd.salespersonid, sd.orderdate, ld.city_name, ld.state_name, ld.country_name, sp.firstname, sp.lastname
 )
 
 select
@@ -56,6 +62,7 @@ select
     state_name,
     country_name,
     total_sales,
-    total_orders
-    orderdate
+    total_orders,
+    orderdate, 
+    TIMESTAMP_SECONDS(orderdate * 24 * 3600) AS converted_orderdate  
 from aggregated_sales
