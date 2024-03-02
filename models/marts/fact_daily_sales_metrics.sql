@@ -2,11 +2,11 @@ with daily_sales_data as (
     select
         soh.salesorderid,
         soh.orderdate,
-        soh.shipmethod,
+        soh.shipmethodid,
         f.unitprice,
         f.orderqty,
         f.totalproductcost,
-        f.totaldue
+        f.revenue_wo_taxandfreight as totaldue
     from `adventureworksdesafiolh`.`dbt_rpires`.`fact_sales` f
     join `adventureworksdesafiolh`.`dbt_rpires`.`stg_salesorderheader` soh
         on f.salesorderid = soh.salesorderid

@@ -10,7 +10,7 @@ with sales_data as (
         f.salesorderid,
         cast(f.unitprice as numeric) as unitprice,  
         cast(f.orderqty as numeric) as orderqty,  
-        f.orderdate
+        DATE(f.orderdate) as orderdate
     from `adventureworksdesafiolh`.`dbt_rpires`.`fact_sales` f
     join `adventureworksdesafiolh`.`dbt_rpires`.`stg_salesorderheader` soh
         on f.salesorderid = soh.salesorderid
@@ -42,7 +42,7 @@ aggregated_sales as (
         ld.country_name,
         sp.firstname,
         sp.lastname,
-        sum(cast(sd.unitprice as numeric) * cast(sd.orderqty as numeric)) as total_sales, 
+        sum(sd.unitprice * sd.orderqty) as total_sales, 
         count(sd.salesorderid) as total_orders
     from sales_data sd
     join location_data ld
@@ -56,11 +56,10 @@ select
     salespersonid,
     firstname,
     lastname,
-    cityname,
-    statename,
-    countryname,
-    totalsales,
-    totalorders,
-    orderdate, 
-    TIMESTAMP_SECONDS(orderdate * 24 * 3600) AS converted_orderdate  
+    city_name as cityname,
+    state_name as statename,
+    country_name as countryname,
+    total_sales as totalsales,
+    total_orders as totalorders,
+    orderdate
 from aggregated_sales
