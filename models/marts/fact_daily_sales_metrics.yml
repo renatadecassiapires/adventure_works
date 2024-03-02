@@ -1,21 +1,35 @@
 version: 2
 
 models:
-  - name: fact_daily_sales_metrics
+  - name: daily_sales_metrics
+    description: |
+      This model calculates daily sales metrics such as total sales, average order value, average products per order, and conversion rate.
     columns:
       - name: orderdate
-        description: "Data do pedido"
+        description: The date of the order.
+        tests:
+          - not_null
       - name: num_orders
-        description: "Número total de pedidos realizados no dia"
+        description: The total number of orders for the day.
+        tests:
+          - not_null
       - name: total_sales
-        description: "Total de vendas realizadas no dia"
+        description: The total sales amount for the day.
+        tests:
+          - not_null
       - name: avg_order_value
-        description: "Valor médio dos pedidos realizados no dia"
+        description: The average order value for the day.
+        tests:
+          - not_null
       - name: avg_products_per_order
-        description: "Quantidade média de produtos por pedido no dia"
+        description: The average number of products per order for the day.
+        tests:
+          - not_null
       - name: conversion_rate
-        description: "Taxa de conversão de pedidos no dia"
-    meta:
-      materialized: table
-      schema: aggregated_tables
-    description: "Tabela contendo métricas diárias de vendas"
+        description: The conversion rate for the day.
+        tests:
+          - not_null
+    materialized: table
+    schema: aggregated_tables
+    unique_key: [orderdate]
+    sql: models/marts/fact_daily_sales_metrics.sql

@@ -1,5 +1,3 @@
--- models/marts/fact_aggregated_sales.sql
-
 {{ config(
     materialized='table',
     schema='aggregated_tables'
@@ -58,11 +56,11 @@ select
     salespersonid,
     firstname,
     lastname,
-    city_name,
-    state_name,
-    country_name,
-    total_sales,
-    total_orders,
+    cityname,
+    statename,
+    countryname,
+    totalsales,
+    totalorders,
     orderdate, 
     TIMESTAMP_SECONDS(orderdate * 24 * 3600) AS converted_orderdate  
 from aggregated_sales

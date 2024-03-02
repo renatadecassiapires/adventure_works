@@ -1,30 +1,41 @@
 version: 2
 
 models:
-  - name: fact_aggegate_sales
+  - name: aggregated_sales
+    description: |
+      This model aggregates sales data by salesperson, location, and date.
     columns:
       - name: salespersonid
-        description: "ID do vendedor"
+        description: The ID of the salesperson.
+        tests:
+          - unique
       - name: firstname
-        description: "Primeiro nome do vendedor"
+        description: The first name of the salesperson.
       - name: lastname
-        description: "Último nome do vendedor"
-      - name: city_name
-        description: "Nome da cidade"
-      - name: state_name
-        description: "Nome do estado"
-      - name: country_name
-        description: "Nome do país"
-      - name: total_sales
-        description: "Total de vendas realizadas pelo vendedor"
-      - name: total_orders
-        description: "Número total de pedidos realizados pelo vendedor"
+        description: The last name of the salesperson.
+      - name: cityname
+        description: The name of the city where the sales were made.
+      - name: statename
+        description: The name of the state where the sales were made.
+      - name: countryname
+        description: The name of the country where the sales were made.
+      - name: totalsales
+        description: The total sales amount.
+        tests:
+          - not_null
+      - name: totalorders
+        description: The total number of orders.
+        tests:
+          - not_null
       - name: orderdate
-        description: "Data do pedido"
-      - name: order_date
-        description: "Data do pedido em formato de data"
-    meta:
-      materialized: table
-      schema: aggregated_tables
-    description: "Tabela contendo métricas agregadas de vendas por vendedor e localização"
-
+        description: The date of the order.
+        tests:
+          - not_null
+      - name: converted_orderdate
+        description: The order date converted to a timestamp.
+        tests:
+          - not_null
+    materialized: table
+    schema: aggregated_tables
+    unique_key: [salespersonid, orderdate, cityname, statename, countryname]
+    sql: models/marts/fact_aggregate_sales.sql
