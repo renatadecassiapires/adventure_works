@@ -44,7 +44,7 @@ aggregated_sales as (
         ld.country_name,
         sp.firstname,
         sp.lastname,
-        sum(sd.unitprice * sd.orderqty) as total_sales,
+        sum(cast(sd.unitprice as numeric) * cast(sd.orderqty as numeric)) as total_sales, 
         count(sd.salesorderid) as total_orders
     from sales_data sd
     join location_data ld

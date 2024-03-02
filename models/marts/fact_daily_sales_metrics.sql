@@ -1,19 +1,22 @@
-{{ config(materialized='table', schema='aggregated_tables') }}
+-- Este arquivo contém as consultas SQL para calcular métricas diárias de vendas
 
+-- Definindo as vendas diárias
 with daily_sales_data as (
     select
         soh.salesorderid,
         soh.orderdate,
+        -- Corrigindo a referência ao campo 'shipmethod'
         soh.shipmethod,
         f.unitprice,
         f.orderqty,
         f.totalproductcost,
         f.totaldue
-    from {{ ref('fact_sales') }} f
-    join {{ ref('stg_salesorderheader') }} soh
+    from `adventureworksdesafiolh`.`dbt_rpires`.`fact_sales` f
+    join `adventureworksdesafiolh`.`dbt_rpires`.`stg_salesorderheader` soh
         on f.salesorderid = soh.salesorderid
 ),
 
+-- Calculando o número de pedidos diários
 daily_orders as (
     select
         orderdate,
@@ -22,6 +25,7 @@ daily_orders as (
     group by orderdate
 ),
 
+-- Calculando o total de vendas diárias
 daily_sales as (
     select
         orderdate,
@@ -30,6 +34,7 @@ daily_sales as (
     group by orderdate
 ),
 
+-- Calculando o valor médio do pedido diário
 daily_average_order_value as (
     select
         orderdate,
@@ -38,6 +43,7 @@ daily_average_order_value as (
     group by orderdate
 ),
 
+-- Calculando a média de produtos por pedido diário
 daily_average_products_per_order as (
     select
         orderdate,
@@ -46,6 +52,7 @@ daily_average_products_per_order as (
     group by orderdate
 ),
 
+-- Calculando a taxa de conversão diária
 daily_conversion_rate as (
     select
         orderdate,
@@ -54,6 +61,7 @@ daily_conversion_rate as (
     group by orderdate
 )
 
+-- Selecionando todas as métricas calculadas
 select
     d.orderdate,
     coalesce(do.num_orders, 0) as num_orders,
@@ -68,4 +76,4 @@ left join daily_orders do on d.orderdate = do.orderdate
 left join daily_sales ds on d.orderdate = ds.orderdate
 left join daily_average_order_value daov on d.orderdate = daov.orderdate
 left join daily_average_products_per_order dappo on d.orderdate = dappo.orderdate
-left join daily_conversion_rate dcr on d.orderdate = dcr.orderdate;
+left join daily_conversion_rate dcr on d.orderdate = dcr.orderdate
