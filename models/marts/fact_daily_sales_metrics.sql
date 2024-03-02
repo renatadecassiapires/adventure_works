@@ -1,11 +1,7 @@
--- Este arquivo contém as consultas SQL para calcular métricas diárias de vendas
-
--- Definindo as vendas diárias
 with daily_sales_data as (
     select
         soh.salesorderid,
         soh.orderdate,
-        -- Corrigindo a referência ao campo 'shipmethod'
         soh.shipmethod,
         f.unitprice,
         f.orderqty,
@@ -16,7 +12,6 @@ with daily_sales_data as (
         on f.salesorderid = soh.salesorderid
 ),
 
--- Calculando o número de pedidos diários
 daily_orders as (
     select
         orderdate,
@@ -25,7 +20,6 @@ daily_orders as (
     group by orderdate
 ),
 
--- Calculando o total de vendas diárias
 daily_sales as (
     select
         orderdate,
@@ -34,7 +28,6 @@ daily_sales as (
     group by orderdate
 ),
 
--- Calculando o valor médio do pedido diário
 daily_average_order_value as (
     select
         orderdate,
@@ -43,7 +36,6 @@ daily_average_order_value as (
     group by orderdate
 ),
 
--- Calculando a média de produtos por pedido diário
 daily_average_products_per_order as (
     select
         orderdate,
@@ -52,7 +44,6 @@ daily_average_products_per_order as (
     group by orderdate
 ),
 
--- Calculando a taxa de conversão diária
 daily_conversion_rate as (
     select
         orderdate,
@@ -61,7 +52,6 @@ daily_conversion_rate as (
     group by orderdate
 )
 
--- Selecionando todas as métricas calculadas
 select
     d.orderdate,
     coalesce(do.num_orders, 0) as num_orders,
