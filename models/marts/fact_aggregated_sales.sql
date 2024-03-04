@@ -1,65 +1,69 @@
-{{ config(
-    materialized='table',
-    schema='aggregated_tables'
-) }}
-
-with sales_data as (
+with daily_sales_data as (
     select
-        soh.salespersonid,
-        soh.shiptoaddressid,
-        f.salesorderid,
-        cast(f.unitprice as numeric) as unitprice,  
-        cast(f.orderqty as numeric) as orderqty,  
-        DATE(f.orderdate) as orderdate
+        soh.salesorderid,
+        soh.orderdate,
+        soh.shipmethodid,
+        f.unitprice,
+        f.orderqty,
+        f.totalproductcost,
+        f.revenue_wo_taxandfreight as totaldue
     from `adventureworksdesafiolh`.`dbt_rpires`.`fact_sales` f
     join `adventureworksdesafiolh`.`dbt_rpires`.`stg_salesorderheader` soh
         on f.salesorderid = soh.salesorderid
 ),
 
-location_data as (
+daily_orders as (
     select
-        loc.shiptoaddress_sk as location_sk,
-        loc.city_name,
-        loc.state_name,
-        loc.country_name
-    from `adventureworksdesafiolh`.`dbt_rpires`.`dim_locations` loc
+        orderdate,
+        count(distinct salesorderid) as num_orders
+    from daily_sales_data
+    group by orderdate
 ),
 
-salesperson_data as (
+daily_sales as (
     select
-        p.businessentityid as salespersonid,
-        p.firstname,
-        p.lastname
-    from `adventureworksdesafiolh`.`dbt_rpires`.`stg_person` p
+        orderdate,
+        sum(totaldue) as total_sales
+    from daily_sales_data
+    group by orderdate
 ),
 
-aggregated_sales as (
+daily_average_order_value as (
     select
-        sd.salespersonid,
-        sd.orderdate,  
-        ld.city_name,
-        ld.state_name,
-        ld.country_name,
-        sp.firstname,
-        sp.lastname,
-        sum(sd.unitprice * sd.orderqty) as total_sales, 
-        count(sd.salesorderid) as total_orders
-    from sales_data sd
-    join location_data ld
-        on sd.shiptoaddressid = ld.location_sk
-    join salesperson_data sp
-        on sd.salespersonid = sp.salespersonid
-    group by sd.salespersonid, sd.orderdate, ld.city_name, ld.state_name, ld.country_name, sp.firstname, sp.lastname
+        orderdate,
+        avg(totaldue) as avg_order_value
+    from daily_sales_data
+    group by orderdate
+),
+
+daily_average_products_per_order as (
+    select
+        orderdate,
+        avg(orderqty) as avg_products_per_order
+    from daily_sales_data
+    group by orderdate
+),
+
+daily_conversion_rate as (
+    select
+        orderdate,
+        count(distinct case when totaldue > 0 then salesorderid end) / count(distinct salesorderid) as conversion_rate
+    from daily_sales_data
+    group by orderdate
 )
 
 select
-    salespersonid,
-    firstname,
-    lastname,
-    city_name as cityname,
-    state_name as statename,
-    country_name as countryname,
-    total_sales as totalsales,
-    total_orders as totalorders,
-    orderdate
-from aggregated_sales
+    d.orderdate,
+    coalesce(do.num_orders, 0) as num_orders,
+    coalesce(ds.total_sales, 0) as total_sales,
+    coalesce(daov.avg_order_value, 0) as avg_order_value,
+    coalesce(dappo.avg_products_per_order, 0) as avg_products_per_order,
+    coalesce(dcr.conversion_rate, 0) as conversion_rate
+from (
+    select distinct orderdate from daily_sales_data
+) d
+left join daily_orders do on d.orderdate = do.orderdate
+left join daily_sales ds on d.orderdate = ds.orderdate
+left join daily_average_order_value daov on d.orderdate = daov.orderdate
+left join daily_average_products_per_order dappo on d.orderdate = dappo.orderdate
+left join daily_conversion_rate dcr on d.orderdate = dcr.orderdate
