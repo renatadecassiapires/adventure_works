@@ -4,7 +4,7 @@ with source_data as (
         , personid
         , storeid
         , territoryid
-    from `adventureworksdesafiolh.dbt_rpires.customer` -- Replace with your actual project and dataset name
+    from `adventureworksdesafiolh.dbt_rpires.customer` 
 )
 select *
 from source_data
