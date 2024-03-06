@@ -1,0 +1,9 @@
+models:
+  - name: dim_produtos
+    description: Essa é a dimensão que informa os produtos da Adventure
+    columns:
+      - name: pk_produto
+        description: Essa é a chave primaria da dimensão produtos
+        tests:
+          - unique
+          - not_null  

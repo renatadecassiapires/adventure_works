@@ -1,0 +1,133 @@
+version: 2
+
+sources:
+  - name: sap
+    description: Sap de vendas adventure
+    schema: sap_adw
+    tables:
+
+# Fato Pedidos (intermediária)
+      - name: salesorderdetail
+        description: Informações sobre a cesta de compras (produtos, quantidade, preço). 
+                      Cada registro nesta tabela representa um único detalhe do pedido.
+        columns: 
+          - name: salesorderdetailid
+            tests:
+            - unique
+            - not_null
+                         
+      - name: salesorderheader
+        description: Informações sobre o pedido de compra (cesta de compras, cliente, vendedor, nota fiscal)
+          Tabela contém informações sobre o cartão de crédito utilizado no pedido, o endereço de entrega e o cliente. 
+          Cada registro nesta tabela representa um cabeçalho de pedido que contém um ou mais detalhes do pedido.
+        columns: 
+         - name: salesorderid
+           tests:
+           - unique
+           - not_null
+
+# Dimensão Produto
+      - name: product
+        description: Informações de identificação do produto (nome, cor, tamanho)
+        columns:
+          - name: productid
+            tests:
+            - unique
+            - not_null
+
+      - name: productcategory
+        description: Informações sobre a categoria do produto ( Bike, componentes, acessórios, roupas)
+        columns:
+          - name: productcategoryid
+            tests:
+            - unique
+            - not_null
+
+      - name: productsubcategory
+        description: Informações de cada produto de acordo com  sua categoria e subcategoria
+        columns:
+          - name: productsubcategoryid
+            tests:
+            - unique
+            - not_null
+
+# Dimensão clientes
+      - name: store
+        description: Informações sobre a loja onde o cliente executou a compra (nome da loja, vendedor)
+        columns:
+          - name: businessentityid
+            tests:
+            - unique
+            - not_null
+       
+      - name: customer
+        description: Informações sobre o cliente 
+        columns:
+          - name: customerid
+            tests:
+            - unique
+            - not_null
+
+      - name: person
+        description: Informações pessoais do cliente (nome, sobrenome)
+        columns:
+          - name: businessentityid
+            tests:
+            - not_null
+
+# Dimensão motivo compra
+      - name: salesreason
+        description: Informações do motivo que levou o cliente a comprar o produto (preço, qualidade, promoção)
+        columns: 
+          - name: salesreasonid
+            tests:
+            - not_null
+            
+        
+                     
+      - name: salesorderheadersalesreason
+        description: Informações que relaciona o motivo com a compra propriamente dita
+        columns: 
+        - name: salesorderid
+          tests:
+           - not_null
+
+# Dimensão degenerada
+      - name: creditcard
+        description: Informações sobre o cartão de crédito utilizado na compra (bandeira, número do cartão, data de validade)
+        columns:
+          - name: creditcardid
+            tests:
+             - unique
+             - not_null
+          
+
+# Dimensão local
+      - name: address
+        description: Informações sobre o endereço da compra
+        columns:
+          - name: addressid
+            tests:
+             - unique
+             - not_null
+
+      - name: stateprovince
+        description: Informações sobre a UF da compra
+        columns:
+          - name: stateprovinceid
+            tests:
+             - unique
+             - not_null
+      
+      - name: countryregion
+        description: Informações sobre o País da compra
+        columns:
+          - name: countryregioncode
+            tests:
+             - unique
+             - not_null
+
+      
+
+
+

@@ -1,10 +1,11 @@
-with source_data as (
+with stg_store as (
     select
         businessentityid
         , name as storename
         , salespersonid
         , modifieddate
-    from {{ source('sap_adw', 'store') }}
+    from {{ source('sap_adw', 'store') }} 
 )
 select *
-from source_data	
+from stg_store	
+
