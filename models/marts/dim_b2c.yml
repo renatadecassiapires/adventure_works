@@ -1,0 +1,9 @@
+models:
+  - name: dim_b2c
+    description: Essa é a dimensão que informa os clientes da Adventure
+    columns:
+      - name: pk_b2c
+        description: Essa é a chave primaria da dimensão clientes b2c
+        tests:
+          - unique
+          - not_null

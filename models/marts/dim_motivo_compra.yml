@@ -1,0 +1,9 @@
+models:
+  - name: dim_motivo_compra
+    description: Essa é a dimensão com informações da motivação dos clientes para executar a compra
+    columns:
+      - name: pk_motivo_compra
+        description: Essa é a chave primaria da dimensão motivo_compra
+        tests:
+          - unique
+          - not_null
