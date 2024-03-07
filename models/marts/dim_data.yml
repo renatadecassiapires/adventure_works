@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: dim_data
+    description: "Dimensão de datas"
+    columns:
+      - name: pk_data
+        description: "Chave primária da data"
+        tests:
+          - unique
+      - name: date_actual
+        description: "Data atual"
+      - name: day_of_month
+        description: "Dia do mês"
+      - name: year
+        description: "Ano"
+      - name: month_actual
+        description: "Mês atual"
+    meta:
+      dbt_utils:
+        var: "date_spine"
+    vars:
+      - name: datepart
+        value: "day"
+      - name: start_date
+        value: "2011-01-01"
+      - name: end_date
+        value: "2016-01-01"
+    sources:
+      - name: default
+        tables:
+          - name: dates

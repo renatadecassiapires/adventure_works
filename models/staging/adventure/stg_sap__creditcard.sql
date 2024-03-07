@@ -1,3 +1,4 @@
+
 with
     fonte_creditcard as (
         select 

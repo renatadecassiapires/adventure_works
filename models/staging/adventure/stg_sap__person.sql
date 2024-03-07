@@ -18,5 +18,3 @@ with
     )
 select *
 from fonte_person
-
-
