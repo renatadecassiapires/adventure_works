@@ -9,6 +9,3 @@ with
     )
 select *
 from fonte_salesreason
-
-
-
