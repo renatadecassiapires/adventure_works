@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: fato_vendas
+    description: "Tabela fato de vendas"
+    columns:
+      - name: produto_fk
+        description: "Chave estrangeira para a dimensão de produtos"
+      - name: pagamento_fk
+        description: "Chave estrangeira para a dimensão de pagamento"
+      - name: local_fk
+        description: "Chave estrangeira para a dimensão de local"
+      - name: sk_pedido_item
+        description: "Chave técnica do item do pedido"
+      - name: id_pedido
+        description: "Identificador do pedido"
+      - name: data_pedido
+        description: "Data do pedido"
+      - name: endereco_destino
+        description: "Endereço de entrega do pedido"
+      - name: subtotal_compra
+        description: "Subtotal da compra"
+      - name: total_compra
+        description: "Total da compra"
+      - name: quantidade_pedido
+        description: "Quantidade do produto vendido"
+      - name: preco_unitario
+        description: "Preço unitário do produto"
+      - name: desconto_preco_unitario
+        description: "Desconto aplicado ao preço unitário"
+      - name: data_fk
+        description: "Chave estrangeira para a dimensão de data"
+      - name: id_status
+        description: "Identificador do status do pedido"
+      - name: status_compra
+        description: "Status da compra (aprovada ou não aprovada)"
+      - name: bruto
+        description: "Valor bruto da venda"
+      - name: liquido
+        description: "Valor líquido da venda"
+      - name: is_desconto
+        description: "Indica se houve desconto na venda"
