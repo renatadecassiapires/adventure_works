@@ -1,6 +1,7 @@
 version: 2
 
 models:
+<<<<<<< HEAD
   - name: dim_data
     description: "Dimensão de datas"
     columns:
@@ -30,3 +31,50 @@ models:
       - name: default
         tables:
           - name: dates
+=======
+  - name: date_array
+    description: |
+      Date array generation using dbt_utils.date_spine
+    columns:
+      - name: date_day
+        description: The date in the array
+        tests:
+          - unique
+          - not_null
+
+  - name: casting_fix
+    description: |
+      Casting date_day as timestamp
+    columns:
+      - name: date_day
+        description: The date casted as timestamp
+        tests:
+          - unique
+          - not_null
+
+  - name: dates
+    description: |
+      Extracting various date components
+    columns:
+      - name: pk_data
+        description: Primary key for the date
+        tests:
+          - unique
+          - not_null
+      - name: date_actual
+        description: The actual date
+        tests:
+          - not_null
+      - name: day_of_month
+        description: The day of the month
+        tests:
+          - not_null
+      - name: year
+        description: The year
+        tests:
+          - not_null
+      - name: month_actual
+        description: The month
+        tests:
+          - not_null
+>>>>>>> a3592c5b7b445d6eb579519390cb195a7f725f16
