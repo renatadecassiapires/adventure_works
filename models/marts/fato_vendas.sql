@@ -1,143 +1,114 @@
-
 -- ---------------------------------------- FATO ----------------------------
 with
     dim_produtos as (
-    select *
-    from {{ ref('dim_produtos') }}
-)
-
-,  dim_pagamento as (
-    select *
-    from {{ ref('dim_pagamento') }}
-)
-
-, dim_local as (
-    select *
-    from {{ ref('dim_local') }}
-)
-
-, dim_data as (
-    select *
-    from {{ ref('dim_data') }}
-)
- 
-, dim_status as (
-    select 
-        id_pedido
-        , id_status
-    from {{ ref('stg_sap__salesorderheader') }}
-)
-
-
-,  pedidos_itens as (
-    select *
-    from {{ ref('int_vendas__pedidos_itens') }}
-
-)
-
-, join_tabelas as (
-    select
-
-    dim_produtos.pk_produto as produto_fk
-   --, dim_produtos.id_produto
-   --, dim_produtos.nome_produto
-   --, dim_produtos.cor_produto
-   --, dim_produtos.id_subcategoria
-   --, dim_produtos.id_categoria
-   --, dim_produtos.nome_subcategoria
-   --, dim_produtos.nome_categoria
-
-<<<<<<< HEAD:models/marts/fct_vendas.sql
-  
-=======
-   
-   
->>>>>>> b9742a1f599bea79f36daa155992d8e5d32e22c2:models/marts/fato_vendas.sql
-    , dim_pagamento.pk_pagamento as pagamento_fk
-   -- , dim_pagamento.nome_bandeira_cartao
-   -- --, dim_pagamento.id_pedido
-   -- , dim_pagamento.data_pedido
-   -- , dim_pagamento.id_status
-   -- , dim_pagamento.id_cliente
-   -- , dim_pagamento.id_vendedor
-   -- , dim_pagamento.id_territorio
-   -- , dim_pagamento.id_cartao
-   -- , dim_pagamento.id_compra_aprovada
-   -- , dim_pagamento.subtotal_compra
-   -- , dim_pagamento.total_compra
-
-    , dim_local.pk_local as local_fk
-    -- , dim_local.id_endereco
-    -- , dim_local.nome_cidade
-    -- , dim_local.id_estado
-    -- , dim_local.nome_uf
-    -- , dim_local.nome_sigla_pais
-    -- , dim_local.nome_estado
-    -- , dim_local.id_territorio
-    -- , dim_local.nome_pais
-
-    , pedidos.sk_pedido_item
-    , pedidos.id_pedido
-    , pedidos.data_pedido
-   -- , pedidos.id_status
-   -- , pedidos.id_cliente
-   -- , pedidos.id_vendedor
-   -- , pedidos.id_territorio
-    , pedidos.endereco_destino
-   -- , pedidos.id_cartao
-   -- , pedidos.id_compra_aprovada
-    , pedidos.subtotal_compra
-    , pedidos.total_compra
-   -- , pedidos.id_detalhe_pedido
-    , pedidos.quantidade_pedido
-    --, pedidos.id_produto
-   -- , pedidos.id_oferta
-    , pedidos.preco_unitario
-    , pedidos.desconto_preco_unitario
-
-
-     , dim_data.pk_data as data_fk
-   --  , dim_data.date_actual
-   --  , dim_data.day_of_month
-    --, dim_data.year
-   -- , dim_data.month_actual
-
-    , dim_status.id_status
-    , case 
-        when dim_status.id_status = 5
-        then "compra_aprovada"
-        else "compra_nao_aprovada"
-    end as status_compra
-
-    from pedidos_itens as pedidos
-    left join dim_produtos 
-        on pedidos.id_produto = dim_produtos.id_produto
-    left join dim_pagamento
-        on pedidos.id_cartao = dim_pagamento.id_cartao
-    left join dim_local 
-        on pedidos.endereco_destino = dim_local.id_endereco
-    left join dim_data 
-        on pedidos.data_pedido = dim_data.date_actual
-    left join dim_status
-        on dim_status.id_pedido = pedidos.id_pedido
-     )
-
-
-  , Transformacoes as (
+        select *
+        from {{ ref('dim_produtos') }}
+    ),
+    dim_pagamento as (
+        select *
+        from {{ ref('dim_pagamento') }}
+    ),
+    dim_local as (
+        select *
+        from {{ ref('dim_local') }}
+    ),
+    dim_data as (
+        select *
+        from {{ ref('dim_data') }}
+    ),
+    dim_status as (
+        select 
+            id_pedido,
+            id_status
+        from {{ ref('stg_sap__salesorderheader') }}
+    ),
+    pedidos_itens as (
+        with 
+            stg_salesorderheader as (
+                select *
+                from {{ ref('stg_sap__salesorderheader') }}
+            ),
+            stg_salesorderdetail as (
+                select *
+                from {{ ref('stg_sap__salesorderdetail') }}
+            ),
+            join_tabelas as (
+                select 
+                      stg_salesorderheader.id_pedido
+                    , stg_salesorderheader.data_pedido
+                    , stg_salesorderheader.id_status
+                    , stg_salesorderheader.id_cliente
+                    , stg_salesorderheader.id_vendedor
+                    , stg_salesorderheader.id_territorio
+                    , stg_salesorderheader.endereco_destino
+                    , stg_salesorderheader.id_cartao
+                    , stg_salesorderheader.id_compra_aprovada
+                    , stg_salesorderheader.subtotal_compra
+                    , stg_salesorderheader.total_compra
+                    , stg_salesorderdetail.id_detalhe_pedido
+                    , stg_salesorderdetail.quantidade_pedido
+                    , stg_salesorderdetail.id_produto
+                    , stg_salesorderdetail.id_oferta
+                    , stg_salesorderdetail.preco_unitario
+                    , stg_salesorderdetail.desconto_preco_unitario
+                from stg_salesorderdetail
+                left join stg_salesorderheader on 
+                    stg_salesorderdetail.id_pedido = stg_salesorderheader.id_pedido
+            ),
+            criar_chave as (
+                select 
+                   cast(id_pedido as string) || cast(id_produto as string) as sk_pedido_item
+                    , *
+                from join_tabelas
+            )
+        select distinct *
+        from criar_chave
+    ),
+    join_tabelas as (
         select
-            *
-            , preco_unitario * quantidade_pedido as bruto
-            , (1 - desconto_preco_unitario) * preco_unitario * quantidade_pedido as liquido
-            , case
+            dim_produtos.pk_produto as produto_fk,
+            dim_pagamento.pk_pagamento as pagamento_fk,
+            dim_local.pk_local as local_fk,
+            pedidos_itens.sk_pedido_item,
+            pedidos_itens.id_pedido,
+            pedidos_itens.data_pedido,
+            pedidos_itens.endereco_destino,
+            pedidos_itens.subtotal_compra,
+            pedidos_itens.total_compra,
+            pedidos_itens.quantidade_pedido,
+            pedidos_itens.preco_unitario,
+            pedidos_itens.desconto_preco_unitario,
+            dim_data.pk_data as data_fk,
+            dim_status.id_status,
+            case 
+                when dim_status.id_status = 5 then "compra_aprovada"
+                else "compra_nao_aprovada"
+            end as status_compra,
+            pedidos_itens.id_cliente as fk_customer -- Adicionando a chave estrangeira do cliente
+        from pedidos_itens
+        left join dim_produtos 
+            on pedidos_itens.id_produto = dim_produtos.id_produto
+        left join dim_pagamento
+            on pedidos_itens.id_cartao = dim_pagamento.id_cartao
+        left join dim_local 
+            on pedidos_itens.endereco_destino = dim_local.id_endereco
+        left join dim_data 
+            on pedidos_itens.data_pedido = dim_data.date_actual
+        left join dim_status
+            on dim_status.id_pedido = pedidos_itens.id_pedido
+    ),
+    transformacoes as (
+        select
+            *,
+            preco_unitario * quantidade_pedido as bruto,
+            (1 - desconto_preco_unitario) * preco_unitario * quantidade_pedido as liquido,
+            case
                 when desconto_preco_unitario > 0 then true
                 when desconto_preco_unitario = 0 then false
                 else false
             end as is_desconto
-    from join_tabelas
-     )
+        from join_tabelas
+    )
 
 select *
-
-from Transformacoes
-
-
+from transformacoes

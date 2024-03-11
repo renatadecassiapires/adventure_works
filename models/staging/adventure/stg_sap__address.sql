@@ -17,7 +17,7 @@
 
 
 with
-    fonte_adress as (
+    fonte_address as (
         select *
         from {{ source('sap', 'address') }}
     )

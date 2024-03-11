@@ -2,41 +2,42 @@ version: 2
 
 models:
   - name: fato_vendas
-    description: "Tabela fato de vendas"
+    description: |
+      Fato de vendas contendo informações sobre pedidos, produtos, pagamento, localização, data e status.
     columns:
       - name: produto_fk
-        description: "Chave estrangeira para a dimensão de produtos"
+        description: Chave estrangeira para a dimensão de produtos.
       - name: pagamento_fk
-        description: "Chave estrangeira para a dimensão de pagamento"
+        description: Chave estrangeira para a dimensão de pagamento.
       - name: local_fk
-        description: "Chave estrangeira para a dimensão de local"
+        description: Chave estrangeira para a dimensão de localização.
       - name: sk_pedido_item
-        description: "Chave técnica do item do pedido"
+        description: Chave composta única para identificar cada item de pedido.
       - name: id_pedido
-        description: "Identificador do pedido"
+        description: Identificador único do pedido.
       - name: data_pedido
-        description: "Data do pedido"
+        description: Data do pedido.
       - name: endereco_destino
-        description: "Endereço de entrega do pedido"
+        description: Endereço de entrega do pedido.
       - name: subtotal_compra
-        description: "Subtotal da compra"
+        description: Subtotal da compra.
       - name: total_compra
-        description: "Total da compra"
+        description: Total da compra.
       - name: quantidade_pedido
-        description: "Quantidade do produto vendido"
+        description: Quantidade do produto no pedido.
       - name: preco_unitario
-        description: "Preço unitário do produto"
+        description: Preço unitário do produto.
       - name: desconto_preco_unitario
-        description: "Desconto aplicado ao preço unitário"
+        description: Desconto aplicado ao preço unitário.
       - name: data_fk
-        description: "Chave estrangeira para a dimensão de data"
+        description: Chave estrangeira para a dimensão de data.
       - name: id_status
-        description: "Identificador do status do pedido"
+        description: Identificador do status do pedido.
       - name: status_compra
-        description: "Status da compra (aprovada ou não aprovada)"
-      - name: bruto
-        description: "Valor bruto da venda"
-      - name: liquido
-        description: "Valor líquido da venda"
-      - name: is_desconto
-        description: "Indica se houve desconto na venda"
+        description: Status da compra (aprovada ou não aprovada).
+      - name: fk_customer
+        description: Chave estrangeira para a dimensão de clientes.
+
+    meta:
+      dbt_utils:
+        type: snapshot
