@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: dim_customer
+    description: >
+      Modelo para criar a dimensão de clientes.
+    columns:
+      - name: customer_sk
+        description: "Chave surrogate para a dimensão de cliente."
+        tests:
+          - unique
+      - name: id_cliente
+        description: "ID do cliente."
+      - name: person_id
+        description: "ID da pessoa associada ao cliente."
+      - name: person_name
+        description: "Nome completo da pessoa associada ao cliente."
+      - name: store_id
+        description: "ID da loja associada ao cliente."
+      - name: store_name
+        description: "Nome da loja associada ao cliente."
+      - name: seller_id
+        description: "ID do vendedor associado à loja."
