@@ -1,15 +1,9 @@
 
-
 -- ---------------------------------------- FATO ----------------------------
 with
     dim_produtos as (
     select *
     from {{ ref('dim_produtos') }}
-)
-
-, dim_b2c as (
-    select *
-    from {{ ref('dim_b2c') }}
 )
 
 ,  dim_pagamento as (
@@ -53,17 +47,7 @@ with
    --, dim_produtos.nome_subcategoria
    --, dim_produtos.nome_categoria
 
-   , dim_b2c.pk_b2c as b2c_fk
-   --, dim_b2c.id_representante
-   --, dim_b2c.nome_loja
-   --, dim_b2c.id_vendedor
-   --, dim_b2c.id_cliente
-   --, dim_b2c.id_pessoa
-   --, dim_b2c.id_territorio
-   --, dim_b2c.nome
-   --, dim_b2c.sobrenome
-
-   
+  
     , dim_pagamento.pk_pagamento as pagamento_fk
    -- , dim_pagamento.nome_bandeira_cartao
    -- --, dim_pagamento.id_pedido
@@ -123,9 +107,7 @@ with
     from pedidos_itens as pedidos
     left join dim_produtos 
         on pedidos.id_produto = dim_produtos.id_produto
-    left join dim_b2c 
-        on pedidos.id_cliente = dim_b2c.id_cliente
-        left join dim_pagamento
+    left join dim_pagamento
         on pedidos.id_cartao = dim_pagamento.id_cartao
     left join dim_local 
         on pedidos.endereco_destino = dim_local.id_endereco
@@ -152,4 +134,5 @@ with
 select *
 
 from Transformacoes
+
 
