@@ -1,16 +1,25 @@
+<<<<<<< HEAD
+# Nome do seu projeto DBT. Deve conter apenas caracteres minúsculos e sublinhados.
+# Um bom nome de pacote deve refletir o nome da sua organização ou o uso pretendido desses modelos.
+name: 'my_new_project'
+
+# Versão do projeto
+=======
 # Name your project! Project names should contain only lowercase characters
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
 name: my_new_project # <-- Name of the project.
+>>>>>>> b9742a1f599bea79f36daa155992d8e5d32e22c2
 version: '1.0.0'
+
+# Versão de configuração do DBT
 config-version: 2
 
-# This setting configures which "profile" dbt uses for this project.
+# Esta configuração especifica qual "perfil" o DBT usará para este projeto.
 profile: 'default'
 
-# These configurations specify where dbt should look for different types of files.
-# The `source-paths` config, for example, states that models in this project can be
-# found in the "models/" directory. You probably won't need to change these!
+# Essas configurações especificam onde o DBT deve procurar diferentes tipos de arquivos.
+# Você provavelmente não precisará alterar esses valores!
 model-paths: ["models"]
 analysis-paths: ["analyses"]
 test-paths: ["tests"]
@@ -18,9 +27,26 @@ seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
+<<<<<<< HEAD
+# Diretório que armazenará os arquivos SQL compilados
+target-path: "target"
+
+# Diretórios a serem removidos pelo `dbt clean`
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# Configurando modelos
+# Documentação completa: https://docs.getdbt.com/docs/configuring-models
+
+models:
+  my_new_project:
+    # Aplica-se a todos os arquivos em models/example/
+=======
 models:
   base_dbt_project:
     # Configuração padrão para todos os modelos dentro de base_dbt_project
+>>>>>>> b9742a1f599bea79f36daa155992d8e5d32e22c2
     staging:
       +materialized: table
       +schema: staging
@@ -35,6 +61,17 @@ models:
       +materialized: table
     marts:
       +schema: marts
+<<<<<<< HEAD
+
+    fct_vendas:
+      +materialized: table
+      +schema: marts
+
+seeds:
+  my_new_project:
+    sap_adventure_works: 
+      +schema: sap_adw
+=======
       +tags: marts
       +materialized: table
     elementary:
@@ -45,3 +82,4 @@ models:
       +schema: re_data
       +tags: re_data
       +materialized: table
+>>>>>>> b9742a1f599bea79f36daa155992d8e5d32e22c2
