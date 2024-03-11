@@ -1,9 +1,11 @@
+version: 2
+
 models:
   - name: dim_local
-    description: Essa é a dimensão que informa o endereço dos clientes da Adventure
+    description: "Essa é a dimensão que informa o endereço dos clientes da Adventure."
     columns:
       - name: pk_local
-        description: Essa é a chave primaria da dimensão local
+        description: "Chave primária da dimensão local."
         tests:
           - unique
           - not_null

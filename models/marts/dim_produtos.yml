@@ -6,4 +6,4 @@ models:
         description: Essa é a chave primaria da dimensão produtos
         tests:
           - unique
-          - not_null  
+          - not_null

@@ -1,8 +1,15 @@
+<<<<<<< HEAD
 # Nome do seu projeto DBT. Deve conter apenas caracteres minúsculos e sublinhados.
 # Um bom nome de pacote deve refletir o nome da sua organização ou o uso pretendido desses modelos.
 name: 'my_new_project'
 
 # Versão do projeto
+=======
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: my_new_project # <-- Name of the project.
+>>>>>>> b9742a1f599bea79f36daa155992d8e5d32e22c2
 version: '1.0.0'
 
 # Versão de configuração do DBT
@@ -20,6 +27,7 @@ seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
 
+<<<<<<< HEAD
 # Diretório que armazenará os arquivos SQL compilados
 target-path: "target"
 
@@ -34,13 +42,26 @@ clean-targets:
 models:
   my_new_project:
     # Aplica-se a todos os arquivos em models/example/
+=======
+models:
+  base_dbt_project:
+    # Configuração padrão para todos os modelos dentro de base_dbt_project
+>>>>>>> b9742a1f599bea79f36daa155992d8e5d32e22c2
     staging:
-      +materialized: view
-      +schema: stg
-
-    marts: 
       +materialized: table
+      +schema: staging
+      +tags: stg
+    analytics:
+      +schema: analytics
+      +tags: analytics
+      +materialized: table
+    sales:
+      +schema: sales
+      +tags: sales
+      +materialized: table
+    marts:
       +schema: marts
+<<<<<<< HEAD
 
     fct_vendas:
       +materialized: table
@@ -50,3 +71,15 @@ seeds:
   my_new_project:
     sap_adventure_works: 
       +schema: sap_adw
+=======
+      +tags: marts
+      +materialized: table
+    elementary:
+      +schema: elementary
+      +tags: elementary
+      +materialized: table
+    re_data:
+      +schema: re_data
+      +tags: re_data
+      +materialized: table
+>>>>>>> b9742a1f599bea79f36daa155992d8e5d32e22c2

@@ -47,7 +47,12 @@ with
    --, dim_produtos.nome_subcategoria
    --, dim_produtos.nome_categoria
 
+<<<<<<< HEAD:models/marts/fct_vendas.sql
   
+=======
+   
+   
+>>>>>>> b9742a1f599bea79f36daa155992d8e5d32e22c2:models/marts/fato_vendas.sql
     , dim_pagamento.pk_pagamento as pagamento_fk
    -- , dim_pagamento.nome_bandeira_cartao
    -- --, dim_pagamento.id_pedido

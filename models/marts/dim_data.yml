@@ -1,48 +1,21 @@
 version: 2
 
 models:
-  - name: date_array
-    description: |
-      Date array generation using dbt_utils.date_spine
-    columns:
-      - name: date_day
-        description: The date in the array
-        tests:
-          - unique
-          - not_null
-
-  - name: casting_fix
-    description: |
-      Casting date_day as timestamp
-    columns:
-      - name: date_day
-        description: The date casted as timestamp
-        tests:
-          - unique
-          - not_null
-
-  - name: dates
-    description: |
-      Extracting various date components
+  - name: dim_data
+    description: "Modelo para criar uma dimensão de datas desde '2011-01-01' até '2016-01-01'. Inclui a chave primária 'pk_data', a data atual, o dia do mês, o ano e o mês atual."
     columns:
       - name: pk_data
-        description: Primary key for the date
-        tests:
-          - unique
-          - not_null
+        description: "Chave primária da dimensão de data, gerada como um hash da data."
+        data_type: varchar
       - name: date_actual
-        description: The actual date
-        tests:
-          - not_null
+        description: "Data atual no formato de data."
+        data_type: date
       - name: day_of_month
-        description: The day of the month
-        tests:
-          - not_null
+        description: "Dia do mês extraído da data."
+        data_type: int
       - name: year
-        description: The year
-        tests:
-          - not_null
+        description: "Ano extraído da data."
+        data_type: int
       - name: month_actual
-        description: The month
-        tests:
-          - not_null
+        description: "Mês atual extraído da data."
+        data_type: int

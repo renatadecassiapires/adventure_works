@@ -17,4 +17,3 @@ with
 select *
 from fonte_salesorderdetail
 order by id_pedido
-
