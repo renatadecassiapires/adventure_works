@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: dim_motivo_compra
+    description: "Dimensão que contém os motivos de compra"
+    columns:
+      - name: id_motivo
+        description: "ID do motivo de compra"
+        tests:
+          - unique
+          - not_null
+      - name: nome_motivo
+        description: "Nome do motivo de compra"
+        tests:
+          - not_null
+      - name: nome_razao_motivo
+        description: "Nome da razão do motivo de compra"
+        tests:
+          - not_null
+    meta:
+      schema: adwsap.sap_adw
