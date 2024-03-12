@@ -1,0 +1,46 @@
+version: 2
+
+models:
+  - name: tabela_modelagem_desafio
+    description: "Tabela resultante da modelagem desafio"
+    columns:
+      - name: produto_fk
+        description: "Chave estrangeira para a dimensão de produtos"
+      - name: b2c_fk
+        description: "Chave estrangeira para a dimensão de B2C"
+      - name: pagamento_fk
+        description: "Chave estrangeira para a dimensão de pagamento"
+      - name: local_fk
+        description: "Chave estrangeira para a dimensão de local"
+      - name: sk_pedido_item
+        description: "Chave do item de pedido"
+      - name: id_pedido
+        description: "ID do pedido"
+      - name: data_pedido
+        description: "Data do pedido"
+      - name: endereco_destino
+        description: "Endereço de entrega"
+      - name: subtotal_compra
+        description: "Subtotal da compra"
+      - name: total_compra
+        description: "Total da compra"
+      - name: quantidade_pedido
+        description: "Quantidade do pedido"
+      - name: preco_unitario
+        description: "Preço unitário"
+      - name: desconto_preco_unitario
+        description: "Desconto no preço unitário"
+      - name: data_fk
+        description: "Chave estrangeira para a dimensão de data"
+      - name: id_status
+        description: "ID do status do pedido"
+      - name: status_compra
+        description: "Status da compra"
+      - name: bruto
+        description: "Total bruto do pedido"
+      - name: liquido
+        description: "Total líquido do pedido"
+      - name: is_desconto
+        description: "Indicador se houve desconto no pedido"
+
+  

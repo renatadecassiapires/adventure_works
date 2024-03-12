@@ -1,5 +1,5 @@
 with 
-    stg_salesreason as (
+    stg_sap__salesreason as (
         select 
             id_motivo,
             nome_motivo,
@@ -8,7 +8,7 @@ with
     )
 
 select *
-from stg_salesreason
+from stg_sap__salesreason
 
 
 

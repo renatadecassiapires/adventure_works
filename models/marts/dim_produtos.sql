@@ -1,9 +1,9 @@
 with 
-    stg_product as (
+    stg_sap__product as (
         select *
         from {{ ref('stg_sap__product') }}
     )
-     , stg_subcategory as (
+     , stg_sap__subcategory as (
         select *
         from {{ ref('stg_sap__subcategory') }}
     )
@@ -15,24 +15,24 @@ with
 
      , join_tabelas as (
         select 
-        stg_product.id_produto
-    ,   stg_product.nome_produto
-    ,   stg_product.cor_produto
-    ,   stg_product.id_subcategoria
+        stg_sap__product.id_produto
+    ,   stg_sap__product.nome_produto
+    ,   stg_sap__product.cor_produto
+    ,   stg_sap__product.id_subcategoria
 
-    --,   stg_subcategory.id_subcategoria
-    ,   stg_subcategory.id_categoria
-    ,   stg_subcategory.nome_subcategoria
+    --,   stg_sap__subcategory.id_subcategoria
+    ,   stg_sap__subcategory.id_categoria
+    ,   stg_sap__subcategory.nome_subcategoria
 
 
-   -- ,   stg_category.id_categoria
-    ,   stg_category.nome_categoria
+   -- ,   stg_sap__category.id_categoria
+    ,   stg_sap__category.nome_categoria
     
      
       
-from stg_product
-        left join stg_subcategory on stg_product.id_subcategoria= stg_subcategory.id_subcategoria
-        left join stg_category on  stg_subcategory.id_categoria = stg_category.id_categoria
+from stg_sap__product
+        left join stg_sap__subcategory on stg_sap__product.id_subcategoria= stg_sap__subcategory.id_subcategoria
+        left join stg_sap__category on  stg_sap__subcategory.id_categoria = stg_sap__category.id_categoria
     )
 
     , criar_chave as (
