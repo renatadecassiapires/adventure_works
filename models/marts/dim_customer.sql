@@ -1,27 +1,27 @@
 
-with stg_customer as (
+with stg_sap__customer as (
     select 
         id_cliente,
         id_pessoa,
         id_loja,
         id_territorio
-    from `adwsap.sap_adw.stg_sap__customer`
+    from {{ref('stg_sap__customer')}}
 ),
 
-stg_person as (
+stg_sap__person as (
     select
         id_representante,
         nome,
         sobrenome
-    from `adwsap.sap_adw.stg_sap__person`
+    from {{ref('stg_sap__customer')}}      
 ),
 
-stg_store as (
+stg_sap__store as (
     select
         id_representante,
         nome_loja,
         id_vendedor
-    from `adwsap.sap_adw.stg_sap__store`
+    from {{ref('stg_sap__store')}}
 ),
 
 transformed as (

@@ -1,18 +1,18 @@
 with
-    stg_creditcard as (
+    stg_sap__creditcard as (
         select *
         from {{ ref('stg_sap__creditcard') }}
     )
 
-    , stg_salesorderheader  as (
+    , stg_sap__salesorderheader  as (
         select *
         from {{ ref('stg_sap__salesorderheader') }}
     )
 
   , join_tabelas as (
         select 
-            stg_creditcard.id_cartao
-            , stg_creditcard.nome_bandeira_cartao
+            stg_sap__creditcard.id_cartao
+            , stg_sap__creditcard.nome_bandeira_cartao
     
 
    -- ,  stg_salesorderheader.id_pedido
@@ -26,9 +26,9 @@ with
    -- ,  stg_salesorderheader.subtotal_compra
    -- ,  stg_salesorderheader.total_compra
 
-    from stg_creditcard
-       -- left join stg_creditcard on
-        --    stg_salesorderheader.id_cartao = stg_creditcard.id_cartao 
+    from stg_sap__creditcard
+       -- left join stg_sap__creditcard on
+        --    stg_sap__salesorderheader.id_cartao = stg_sap__creditcard.id_cartao 
 
        )
 
